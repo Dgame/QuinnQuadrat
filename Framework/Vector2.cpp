@@ -39,6 +39,26 @@ namespace sdl {
 		return Vector2i(lhs.x % rhs.x, lhs.y % rhs.y);
 	}
 
+	Vector2i operator +(const Vector2i& lhs, i32_t rhs) {
+		return Vector2i(lhs.x + rhs, lhs.y + rhs);
+	}
+
+	Vector2i operator -(const Vector2i& lhs, i32_t rhs) {
+		return Vector2i(lhs.x - rhs, lhs.y - rhs);
+	}
+
+	Vector2i operator *(const Vector2i& lhs, i32_t rhs) {
+		return Vector2i(lhs.x * rhs, lhs.y * rhs);
+	}
+
+	Vector2i operator /(const Vector2i& lhs, i32_t rhs) {
+		return Vector2i(lhs.x / rhs, lhs.y / rhs);
+	}
+
+	Vector2i operator %(const Vector2i& lhs, i32_t rhs) {
+		return Vector2i(lhs.x % rhs, lhs.y % rhs);
+	}
+
 	Vector2i& operator +=(Vector2i& lhs, const Vector2i& rhs) {
 		lhs.x += rhs.x;
 		lhs.y += rhs.y;

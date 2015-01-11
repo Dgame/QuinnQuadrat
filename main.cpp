@@ -6,20 +6,23 @@
 #include "Framework/Surface.hpp"
 #include "Framework/Timer.hpp"
 
-#include "Level.hpp"
-#include "LevelManager.hpp"
-
 #undef main
+
+#include "Level.hpp"
+#include "TileMap.hpp"
 
 #include <iostream>
 
 int main() {
-	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 640, 480);
+	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 768, 480);
 	sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
 	rend->setDrawColor(sdl::Color::White);
-
-	LevelManager lvl_manager(rend);
-	lvl_manager.load(0);
+/*
+	sdl::Texture* tile_gras = sdl::Surface("media/Tiles-4/Tileset-Bottom-Gras.png").asTextureOf(rend);
+	sdl::Rect tile_dst(10, 10, 96, 32);
+*/
+	Level lvl;
+	lvl.loadNext(rend);
 
 	sdl::Timer timer;
 	timer.start();
@@ -62,8 +65,8 @@ int main() {
 		}
 
 		rend->clear();
-		if (lvl_manager.getCurrentLevel())
-			lvl_manager.getCurrentLevel()->renderOn(rend);
+		rend->draw(*lvl.map);
+		//rend->copy(tile_gras, &tile_dst, nullptr);
 		rend->present();
 	}
 }

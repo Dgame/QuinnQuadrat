@@ -38,6 +38,7 @@ namespace sdl {
 
 		void setRenderTarget(Texture*) const;
 
+		void setScale(f32_t, f32_t) const;
 		void setScale(const Vector2f&) const;
 		Vector2f getScale() const;
 

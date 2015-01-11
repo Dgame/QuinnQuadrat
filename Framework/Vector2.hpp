@@ -37,6 +37,12 @@ namespace sdl {
 	Vector2i operator /(const Vector2i&, const Vector2i&);
 	Vector2i operator %(const Vector2i&, const Vector2i&);
 
+	Vector2i operator +(const Vector2i&, i32_t);
+	Vector2i operator -(const Vector2i&, i32_t);
+	Vector2i operator *(const Vector2i&, i32_t);
+	Vector2i operator /(const Vector2i&, i32_t);
+	Vector2i operator %(const Vector2i&, i32_t);
+
 	Vector2i& operator +=(Vector2i&, const Vector2i&);
 	Vector2i& operator -=(Vector2i&, const Vector2i&);
 	Vector2i& operator *=(Vector2i&, const Vector2i&);

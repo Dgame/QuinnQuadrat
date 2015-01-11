@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <iostream>
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 #define R_MASK 0xff000000
@@ -21,25 +22,34 @@
 namespace sdl {
 	Surface::Surface(u16_t w, u16_t h, u8_t d) {
 		_srfc = SDL_CreateRGBSurface(0, w, h, d, R_MASK, G_MASK, B_MASK, A_MASK);
+		if (!_srfc)
+			std::cerr << "Invalid SDL_Surface*\n";
 	}
 
 	Surface::Surface(void* pixel_data, u16_t w, u16_t h, u8_t d) {
 		const u16_t pitch = w * (d / 8);
         _srfc = SDL_CreateRGBSurfaceFrom(pixel_data, w, h, d, pitch, R_MASK, G_MASK, B_MASK, A_MASK);
+        if (!_srfc)
+        	std::cerr << "Invalid SDL_Surface*\n";
 	}
 
 	Surface::Surface(const char* filename) {
 		_srfc = IMG_Load(filename);
+		if (!_srfc)
+			std::cerr << "Invalid SDL_Surface*\n";
 	}
 
 	Surface::Surface(SDL_Surface* srfc) : _srfc(srfc) {
-
+		if (!srfc)
+			std::cerr << "Invalid SDL_Surface*\n";
 	}
 
 	Surface::Surface(const Surface& other) {
 		_srfc = other.get();
 		if (_srfc)
 			_srfc->refcount++;
+		else
+			std::cerr << "Invalid SDL_Surface*\n";
 	}
 
 	Surface::~Surface() {

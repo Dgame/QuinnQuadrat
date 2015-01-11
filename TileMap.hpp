@@ -2,32 +2,24 @@
 #define GAME_TILE_MAP_HPP
 
 #include <vector>
+#include <string>
 
 #include "Framework/types.hpp"
 #include "Framework/Drawable.hpp"
 
 namespace sdl {
     struct Vector2i;
+
     class Texture;
+    class Renderer;
 }
 
 struct Tile;
 
 class TileMap : public sdl::Drawable {
-private:
-    std::vector<Tile*> _tiles;
-
-    sdl::Texture* _tex;
-
-    u16_t _width;
-    u16_t _height;
-
 public:
-    explicit TileMap(const std::string&);
+    explicit TileMap(sdl::Renderer*, const std::string&);
     virtual ~TileMap();
-
-    virtual void renderOn(const sdl::Renderer*) const override;
-    virtual void renderOn(const sdl::Window*) const override;
 
     Tile* getTileAt(const sdl::Vector2i&) const;
 
@@ -38,6 +30,17 @@ public:
     u16_t height() const {
         return _height;
     }
+
+    virtual void renderOn(const sdl::Renderer*) const override;
+    virtual void renderOn(const sdl::Window*) const override;
+
+private:
+    std::vector<Tile*> _tiles;
+
+    sdl::Texture* _tex;
+
+    u16_t _width;
+    u16_t _height;
 };
 
 #endif

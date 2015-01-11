@@ -46,6 +46,7 @@ namespace sdl {
 		u32_t width() const;
 		u32_t height() const;
 
+		void setPosition(u32_t, u32_t) const;
 		void setPosition(const Vector2i&) const;
 		Vector2i getPosition() const;
 

@@ -1,13 +1,12 @@
 #include "Window.hpp"
 
-#include <iostream>
-
 #include "Vector2.hpp"
 #include "Rect.hpp"
 #include "Surface.hpp"
 #include "Drawable.hpp"
 #include "Renderer.hpp"
 
+#include <iostream>
 #include <SDL_image.h>
 
 namespace {
@@ -39,14 +38,18 @@ namespace sdl {
 	        flags
 	    );
 
-	    if (flags & SDL_WINDOW_OPENGL) {
+	    _isValid = _wnd != nullptr;
+	    if (!_isValid)
+	    	std::cerr << "Error by creating a SDL_Window*\n";
+
+	    if (_isValid && (flags & SDL_WINDOW_OPENGL)) {
 	    	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 	    	_gl_context = SDL_GL_CreateContext(_wnd);
+	    	if (!_gl_context)
+	    		std::cerr << "Error by creating a SDL_GL_Context\n";
 	    }
-
-	    _isValid = _wnd != nullptr;
 	}
 
 	Window::~Window() {
@@ -126,6 +129,10 @@ namespace sdl {
 		this->fetchSize(nullptr, &h);
 
 		return h;
+	}
+
+	void Window::setPosition(u32_t cx, u32_t cy) const {
+		SDL_SetWindowPosition(_wnd, cx, cy);
 	}
 
 	void Window::setPosition(const Vector2i& pos) const {

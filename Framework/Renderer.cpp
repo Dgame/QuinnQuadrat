@@ -6,10 +6,16 @@
 #include "Drawable.hpp"
 
 #include <SDL.h>
+#include <iostream>
 
 namespace sdl {
 	Renderer::Renderer(SDL_Window* wnd, u8_t flags, i16_t driver_index) {
-		_renderer = SDL_CreateRenderer(wnd, driver_index, flags);
+		if (wnd) {
+			_renderer = SDL_CreateRenderer(wnd, driver_index, flags);
+			if (!_renderer)
+				std::cerr << "Error by creating a SDL_Renderer*\n";
+		} else
+			std::cerr << "Invalid SDL_Window*\n";
 	}
 
 	Renderer::~Renderer() {
@@ -38,22 +44,44 @@ namespace sdl {
 	}
 
 	Texture* Renderer::createTexture(SDL_Surface* srfc, bool free_srfc) {
-		SDL_Texture* sdl_tex = SDL_CreateTextureFromSurface(_renderer, srfc);
-		Texture* tex = new Texture(sdl_tex);
-		_textures.push_back(tex);
+		if (srfc) {
+			SDL_Texture* sdl_tex = SDL_CreateTextureFromSurface(_renderer, srfc);
+			if (!sdl_tex) {
+				std::cerr << "Error by creating a SDL_Texture*\n";
+				return nullptr;
+			}
 
-		if (free_srfc) {
-			SDL_FreeSurface(srfc);
-			srfc = nullptr;
+			Texture* tex = new Texture(sdl_tex);
+			_textures.push_back(tex);
+
+			if (free_srfc) {
+				SDL_FreeSurface(srfc);
+				srfc = nullptr;
+			}
+
+			return tex;
 		}
 
-		return tex;
+		std::cerr << "Invalid SDL_Surface*\n";
+
+		return nullptr;
 	}
 
 	Texture* Renderer::createTexture(u16_t w, u16_t h, u32_t format, u8_t access) {
 		auto sdl_access = static_cast<SDL_TextureAccess>(access);
 
-		SDL_Texture* sdl_tex = SDL_CreateTexture(_renderer, format, sdl_access, w, h);
+		SDL_Texture* sdl_tex = SDL_CreateTexture(
+			_renderer,
+			format,
+			sdl_access,
+			w, h
+		);
+
+		if (!sdl_tex) {
+			std::cerr << "Error by creating a SDL_Texture*\n";
+			return nullptr;
+		}
+
 		Texture* tex = new Texture(sdl_tex);
 		_textures.push_back(tex);
 
@@ -65,7 +93,8 @@ namespace sdl {
 			SDL_Rect sdl_src;
 			SDL_Rect sdl_dst;
 
-			SDL_RenderCopy(_renderer,
+			SDL_RenderCopy(
+				_renderer,
 				tex->get(),
 				TryCopyInto(src, &sdl_src),
 				TryCopyInto(dst, &sdl_dst)
@@ -80,7 +109,8 @@ namespace sdl {
 		SDL_Rect sdl_dst;
 		SDL_Point sdl_point;
 
-		SDL_RenderCopyEx(_renderer,
+		SDL_RenderCopyEx(
+			_renderer,
 			tex->get(),
 			TryCopyInto(src, &sdl_src),
 			TryCopyInto(dst, &sdl_dst),
@@ -96,6 +126,10 @@ namespace sdl {
 
 	void Renderer::setRenderTarget(Texture* tex) const {
 		SDL_SetRenderTarget(_renderer, tex ? tex->get() : nullptr);
+	}
+
+	void Renderer::setScale(f32_t sx, f32_t sy) const {
+		SDL_RenderSetScale(_renderer, sx, sy);
 	}
 
 	void Renderer::setScale(const Vector2f& scale) const {

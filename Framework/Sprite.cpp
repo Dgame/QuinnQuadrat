@@ -42,11 +42,17 @@ namespace sdl {
 
 	Rect Sprite::getClipRect() const {
 		u32_t w = 0, h = 0;
-		if (_tex)
-			_tex->query(&w, &h);
-		else if (_srfc) {
-			w = _srfc->width();
-			h = _srfc->height();
+
+		if (this->sourceRect.isEmpty()) {
+			if (_tex)
+				_tex->query(&w, &h);
+			else if (_srfc) {
+				w = _srfc->width();
+				h = _srfc->height();
+			}
+		} else {
+			w = this->sourceRect.width;
+			h = this->sourceRect.height;
 		}
 
 		return Rect(this->position.x, this->position.y, w, h);

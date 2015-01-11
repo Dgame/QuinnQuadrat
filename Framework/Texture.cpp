@@ -1,11 +1,14 @@
 #include "Texture.hpp"
 #include "Rect.hpp"
 #include "Color.hpp"
+
 #include <SDL.h>
+#include <iostream>
 
 namespace sdl {
 	Texture::Texture(SDL_Texture* tex) : _tex(tex) {
-
+		if (!tex)
+			std::cerr << "Invalid SDL_Texture*\n";
 	}
 
 	Texture::~Texture() {

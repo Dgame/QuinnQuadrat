@@ -8582,7 +8582,7 @@ PUGI__NS_BEGIN
 			{
 				xpath_context c(*it, i, size);
 
-				if (expr->eval_number(c, stack) == i)
+				if (static_cast<int>(expr->eval_number(c, stack)) == i)
 				{
 					*last++ = *it;
 
@@ -8604,7 +8604,7 @@ PUGI__NS_BEGIN
 
 			xpath_context c(xpath_node(), 1, size);
 
-			double er = expr->eval_number(c, stack);
+			int er = static_cast<int>(expr->eval_number(c, stack));
 
 			if (er >= 1.0 && er <= size)
 			{
@@ -9093,40 +9093,40 @@ PUGI__NS_BEGIN
 		
 	public:
 		xpath_ast_node(ast_type_t type, xpath_value_type rettype_, const char_t* value):
-			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(0), _right(0), _next(0)
+			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(0), _right(0), _next(nullptr)
 		{
 			assert(type == ast_string_constant);
 			_data.string = value;
 		}
 
 		xpath_ast_node(ast_type_t type, xpath_value_type rettype_, double value):
-			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(0), _right(0), _next(0)
+			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(0), _right(0), _next(nullptr)
 		{
 			assert(type == ast_number_constant);
 			_data.number = value;
 		}
 		
 		xpath_ast_node(ast_type_t type, xpath_value_type rettype_, xpath_variable* value):
-			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(0), _right(0), _next(0)
+			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(0), _right(0), _next(nullptr)
 		{
 			assert(type == ast_variable);
 			_data.variable = value;
 		}
 		
 		xpath_ast_node(ast_type_t type, xpath_value_type rettype_, xpath_ast_node* left = 0, xpath_ast_node* right = 0):
-			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(left), _right(right), _next(0)
+			_type(static_cast<char>(type)), _rettype(static_cast<char>(rettype_)), _axis(0), _test(0), _left(left), _right(right), _next(nullptr)
 		{
 		}
 
 		xpath_ast_node(ast_type_t type, xpath_ast_node* left, axis_t axis, nodetest_t test, const char_t* contents):
-			_type(static_cast<char>(type)), _rettype(xpath_type_node_set), _axis(static_cast<char>(axis)), _test(static_cast<char>(test)), _left(left), _right(0), _next(0)
+			_type(static_cast<char>(type)), _rettype(xpath_type_node_set), _axis(static_cast<char>(axis)), _test(static_cast<char>(test)), _left(left), _right(0), _next(nullptr)
 		{
 			assert(type == ast_step);
 			_data.nodetest = contents;
 		}
 
 		xpath_ast_node(ast_type_t type, xpath_ast_node* left, xpath_ast_node* right, predicate_t test):
-			_type(static_cast<char>(type)), _rettype(xpath_type_node_set), _axis(0), _test(static_cast<char>(test)), _left(left), _right(right), _next(0)
+			_type(static_cast<char>(type)), _rettype(xpath_type_node_set), _axis(0), _test(static_cast<char>(test)), _left(left), _right(right), _next(nullptr)
 		{
 			assert(type == ast_filter || type == ast_predicate);
 		}
@@ -10121,7 +10121,7 @@ PUGI__NS_BEGIN
 
 			throw_error("Unrecognized function or wrong parameter count");
 
-			return 0;
+			return nullptr;
 		}
 
 		axis_t parse_axis_name(const xpath_lexer_string& name, bool& specified)
@@ -10288,13 +10288,13 @@ PUGI__NS_BEGIN
 
 			case lex_string:
 			{
-				xpath_ast_node* args[2] = {0};
+				xpath_ast_node* args[2] = {nullptr};
 				size_t argc = 0;
 				
 				xpath_lexer_string function = _lexer.contents();
 				_lexer.next();
 				
-				xpath_ast_node* last_arg = 0;
+				xpath_ast_node* last_arg = nullptr;
 				
 				if (_lexer.current() != lex_open_brace)
 					throw_error("Unrecognized function call");
@@ -10326,7 +10326,7 @@ PUGI__NS_BEGIN
 			default:
 				throw_error("Unrecognizable primary expression");
 
-				return 0;
+				return nullptr;
 			}
 		}
 		
@@ -10380,13 +10380,13 @@ PUGI__NS_BEGIN
 			{
 				_lexer.next();
 				
-				return new (alloc_node()) xpath_ast_node(ast_step, set, axis_self, nodetest_type_node, 0);
+				return new (alloc_node()) xpath_ast_node(ast_step, set, axis_self, nodetest_type_node, nullptr);
 			}
 			else if (_lexer.current() == lex_double_dot)
 			{
 				_lexer.next();
 				
-				return new (alloc_node()) xpath_ast_node(ast_step, set, axis_parent, nodetest_type_node, 0);
+				return new (alloc_node()) xpath_ast_node(ast_step, set, axis_parent, nodetest_type_node, nullptr);
 			}
 		
 			nodetest_t nt_type = nodetest_none;
@@ -10481,7 +10481,7 @@ PUGI__NS_BEGIN
 			
 			xpath_ast_node* n = new (alloc_node()) xpath_ast_node(ast_step, set, axis, nt_type, alloc_string(nt_name));
 			
-			xpath_ast_node* last = 0;
+			xpath_ast_node* last = nullptr;
 			
 			while (_lexer.current() == lex_open_square_brace)
 			{
@@ -10489,7 +10489,7 @@ PUGI__NS_BEGIN
 				
 				xpath_ast_node* expr = parse_expression();
 
-				xpath_ast_node* pred = new (alloc_node()) xpath_ast_node(ast_predicate, 0, expr, predicate_default);
+				xpath_ast_node* pred = new (alloc_node()) xpath_ast_node(ast_predicate, nullptr, expr, predicate_default);
 				
 				if (_lexer.current() != lex_close_square_brace)
 					throw_error("Unmatched square brace");
@@ -10515,7 +10515,7 @@ PUGI__NS_BEGIN
 				_lexer.next();
 
 				if (l == lex_double_slash)
-					n = new (alloc_node()) xpath_ast_node(ast_step, n, axis_descendant_or_self, nodetest_type_node, 0);
+					n = new (alloc_node()) xpath_ast_node(ast_step, n, axis_descendant_or_self, nodetest_type_node, nullptr);
 				
 				n = parse_step(n);
 			}
@@ -10546,13 +10546,13 @@ PUGI__NS_BEGIN
 				_lexer.next();
 				
 				xpath_ast_node* n = new (alloc_node()) xpath_ast_node(ast_step_root, xpath_type_node_set);
-				n = new (alloc_node()) xpath_ast_node(ast_step, n, axis_descendant_or_self, nodetest_type_node, 0);
+				n = new (alloc_node()) xpath_ast_node(ast_step, n, axis_descendant_or_self, nodetest_type_node, nullptr);
 				
 				return parse_relative_location_path(n);
 			}
 
 			// else clause moved outside of if because of bogus warning 'control may reach end of non-void function being inlined' in gcc 4.0.1
-			return parse_relative_location_path(0);
+			return parse_relative_location_path(nullptr);
 		}
 		
 		// PathExpr ::= LocationPath
@@ -10598,7 +10598,7 @@ PUGI__NS_BEGIN
 					{
 						if (n->rettype() != xpath_type_node_set) throw_error("Step has to be applied to node set");
 
-						n = new (alloc_node()) xpath_ast_node(ast_step, n, axis_descendant_or_self, nodetest_type_node, 0);
+						n = new (alloc_node()) xpath_ast_node(ast_step, n, axis_descendant_or_self, nodetest_type_node, nullptr);
 					}
 	
 					// select from location path
@@ -10790,9 +10790,9 @@ PUGI__NS_BEGIN
 			xml_memory::deallocate(ptr);
 		}
 
-		xpath_query_impl(): root(0), alloc(&block)
+		xpath_query_impl(): root(nullptr), alloc(&block)
 		{
-			block.next = 0;
+			block.next = nullptr;
 			block.capacity = sizeof(block.data);
 		}
 
@@ -10816,7 +10816,7 @@ PUGI__NS_BEGIN
 
 	PUGI__FN impl::xpath_ast_node* evaluate_node_set_prepare(xpath_query_impl* impl)
 	{
-		if (!impl) return 0;
+		if (!impl) return nullptr;
 
 		if (impl->root->rettype() != xpath_type_node_set)
 		{
@@ -10886,7 +10886,7 @@ namespace pugi
 
 	PUGI__FN xpath_node::operator xpath_node::unspecified_bool_type() const
 	{
-		return (_node || _attribute) ? unspecified_bool_xpath_node : 0;
+		return (_node || _attribute) ? unspecified_bool_xpath_node : nullptr;
 	}
 	
 	PUGI__FN bool xpath_node::operator!() const
@@ -11034,7 +11034,7 @@ namespace pugi
 
 	PUGI__FN xpath_parse_result::operator bool() const
 	{
-		return error == 0;
+		return error == nullptr;
 	}
 
 	PUGI__FN const char* xpath_parse_result::description() const
@@ -11042,7 +11042,7 @@ namespace pugi
 		return error ? error : "No error";
 	}
 
-	PUGI__FN xpath_variable::xpath_variable(): _type(xpath_type_none), _next(0)
+	PUGI__FN xpath_variable::xpath_variable(): _type(xpath_type_none), _next(nullptr)
 	{
 	}
 
@@ -11064,7 +11064,7 @@ namespace pugi
 
 		default:
 			assert(!"Invalid variable type");
-			return 0;
+			return nullptr;
 		}
 	}
 
@@ -11085,7 +11085,7 @@ namespace pugi
 
 	PUGI__FN const char_t* xpath_variable::get_string() const
 	{
-		const char_t* value = (_type == xpath_type_string) ? static_cast<const impl::xpath_variable_string*>(this)->value : 0;
+		const char_t* value = (_type == xpath_type_string) ? static_cast<const impl::xpath_variable_string*>(this)->value : nullptr;
 		return value ? value : PUGIXML_TEXT("");
 	}
 
@@ -11141,7 +11141,7 @@ namespace pugi
 
 	PUGI__FN xpath_variable_set::xpath_variable_set()
 	{
-		for (size_t i = 0; i < sizeof(_data) / sizeof(_data[0]); ++i) _data[i] = 0;
+		for (size_t i = 0; i < sizeof(_data) / sizeof(_data[0]); ++i) _data[i] = nullptr;
 	}
 
 	PUGI__FN xpath_variable_set::~xpath_variable_set()
@@ -11171,7 +11171,7 @@ namespace pugi
 			if (impl::strequal(var->name(), name))
 				return var;
 
-		return 0;
+		return nullptr;
 	}
 
 	PUGI__FN xpath_variable* xpath_variable_set::add(const char_t* name, xpath_value_type type)
@@ -11182,7 +11182,7 @@ namespace pugi
 		// look for existing variable
 		for (xpath_variable* var = _data[hash]; var; var = var->_next)
 			if (impl::strequal(var->name(), name))
-				return var->type() == type ? var : 0;
+				return var->type() == type ? var : nullptr;
 
 		// add new variable
 		xpath_variable* result = impl::new_xpath_variable(type, name);
@@ -11232,7 +11232,7 @@ namespace pugi
 		return find(name);
 	}
 
-	PUGI__FN xpath_query::xpath_query(const char_t* query, xpath_variable_set* variables): _impl(0)
+	PUGI__FN xpath_query::xpath_query(const char_t* query, xpath_variable_set* variables): _impl(nullptr)
 	{
 		impl::xpath_query_impl* qimpl = impl::xpath_query_impl::create();
 
@@ -11255,7 +11255,7 @@ namespace pugi
 				qimpl->root->optimize(&qimpl->alloc);
 
 				_impl = static_cast<impl::xpath_query_impl*>(impl_holder.release());
-				_result.error = 0;
+				_result.error = nullptr;
 			}
 		}
 	}
@@ -11376,7 +11376,7 @@ namespace pugi
 
 	PUGI__FN xpath_query::operator xpath_query::unspecified_bool_type() const
 	{
-		return _impl ? unspecified_bool_xpath_query : 0;
+		return _impl ? unspecified_bool_xpath_query : nullptr;
 	}
 
 	PUGI__FN bool xpath_query::operator!() const
