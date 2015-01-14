@@ -56,6 +56,15 @@ TileMap::~TileMap() {
 	}
 }
 
+Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
+    for (Tile* tile : _tiles) {
+        if (tile && tile->position == pos)
+            return tile;
+    }
+
+    return nullptr;
+}
+
 void TileMap::renderOn(const sdl::Renderer* rend) const {
 	if (!rend)
 		return;
@@ -65,6 +74,11 @@ void TileMap::renderOn(const sdl::Renderer* rend) const {
 	}
 }
 
-void TileMap::renderOn(const sdl::Window*) const {
+void TileMap::renderOn(const sdl::Window* wnd) const {
+    if (!wnd)
+        return;
 
+    for (const Tile* tile : _tiles) {
+        wnd->draw(*tile);
+    }
 }

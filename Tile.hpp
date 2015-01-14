@@ -5,6 +5,10 @@
 #include "Framework/Sprite.hpp"
 
 struct Tile : public sdl::Sprite {
+	static const u16_t Size = 32;
+	static const u16_t TilesetWidth = 96;
+	static const u16_t TilesetHeight = 128;
+
 	enum ID {
 		LeftEdge = 0x001,
 		RightEdge = 0x002,
@@ -14,7 +18,7 @@ struct Tile : public sdl::Sprite {
 		Brittle = 0x010
 	};
 
-	u16_t id;
+	u16_t mask;
 	
     explicit Tile(u16_t, sdl::Texture*, const sdl::Vector2i&);
     virtual ~Tile() { }

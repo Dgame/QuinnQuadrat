@@ -2,6 +2,14 @@
 #include <SDL.h>
 
 namespace sdl {
+	Vector2f::Vector2f(f32_t cx, f32_t cy) : x(cx), y(cy) {
+
+	}
+
+	Vector2f::Vector2f(const Vector2i& vec) : x(vec.x), y(vec.y) {
+
+	}
+
 	Vector2i::Vector2i(i32_t cx, i32_t cy) : x(cx), y(cy) {
 
 	}

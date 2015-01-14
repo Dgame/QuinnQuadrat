@@ -67,9 +67,9 @@ namespace sdl {
 				return std::fabs(a - b) < std::numeric_limits<f64_t>::epsilon();
 			};
 
-			if (!feq(this->angle, 0)) {
+			if (!feq(this->rotationAngle, 0)) {
 				const Vector2i* p_center = this->center.isNull() ? nullptr : &this->center;
-				rend->copy(_tex, &dst, this->angle, p_src, p_center, this->flipMode);
+				rend->copy(_tex, &dst, this->rotationAngle, p_src, p_center, this->flipMode);
 			} else
 				rend->copy(_tex, &dst, p_src);
 		}

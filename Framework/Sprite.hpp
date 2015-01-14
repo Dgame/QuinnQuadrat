@@ -22,20 +22,28 @@ namespace sdl {
 		Surface* setImage(Surface&);
 		Texture* setImage(Texture*);
 
+		Surface* getSurface() const {
+			return _srfc;
+		}
+
+		Texture* getTexture() const {
+			return _tex;
+		}
+
 		Rect getClipRect() const;
 
 		virtual void renderOn(const Renderer*) const override;
 		virtual void renderOn(const Window*) const override;
 
 	private:
-		Texture* _tex;
-		Surface* _srfc;
+		Texture* _tex = nullptr;
+		Surface* _srfc = nullptr;
 
 	public:
 		Vector2i position;
 		Vector2i center;
 
-		f64_t angle = 0;
+		f64_t rotationAngle = 0;
 		u8_t flipMode = 0;
 
 		Rect sourceRect;

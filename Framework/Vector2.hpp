@@ -6,12 +6,15 @@
 struct SDL_Point;
 
 namespace sdl {
+	struct Vector2i;
+
 	struct Vector2f {
 		f32_t x = 0;
 		f32_t y = 0;
 
 		Vector2f() = default;
 		explicit Vector2f(f32_t, f32_t);
+		Vector2f(const Vector2i&);
 		virtual ~Vector2f() { }
 	};
 
@@ -21,7 +24,7 @@ namespace sdl {
 
 		Vector2i() = default;
 		explicit Vector2i(i32_t, i32_t);
-		explicit Vector2i(const Vector2f&);
+		Vector2i(const Vector2f&);
 		virtual ~Vector2i() { }
 
 		bool isNull() const {

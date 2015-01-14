@@ -42,6 +42,46 @@ namespace sdl {
 		return intersects == SDL_TRUE;
 	}
 
+	Vector2i Rect::getEdgePosition(Edge edge) const {
+		Vector2i pos;
+		switch (edge) {
+			case Edge::Top:
+				pos.x = this->x + (this->width / 2);
+				pos.y = this->y;
+			break;
+			case Edge::Bottom:
+				pos.x = this->x + (this->width / 2);
+				pos.y = this->y + this->height;
+			break;
+			case Edge::Left:
+				pos.x = this->x;
+				pos.y = this->y + (this->height / 2);
+			break;
+			case Edge::Right:
+				pos.x = this->x + this->width;
+				pos.y = this->y + (this->height / 2);
+			break;
+			case Edge::TopLeft:
+				pos.x = this->x;
+				pos.y = this->y;
+			break;
+			case Edge::TopRight:
+				pos.x = this->x + this->width;
+				pos.y = this->y;
+			break;
+			case Edge::BottomLeft:
+				pos.x = this->x;
+				pos.y = this->y + this->height;
+			break;
+			case Edge::BottomRight:
+				pos.x = this->x + this->width;
+				pos.y = this->y + this->height;
+			break;
+		}
+
+		return pos;
+	}
+
 	Vector2i Rect::getCenter() const {
 		return Vector2i(this->x + (this->width / 2), this->y + (this->height / 2));
 	}
