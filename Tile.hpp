@@ -9,7 +9,7 @@ struct Tile : public sdl::Sprite {
 	static const u16_t TilesetWidth = 96;
 	static const u16_t TilesetHeight = 128;
 
-	enum ID {
+	enum Masks {
 		LeftEdge = 0x001,
 		RightEdge = 0x002,
 		Edge = LeftEdge | RightEdge,
