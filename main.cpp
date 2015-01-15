@@ -44,6 +44,8 @@ int main() {
 	f32_t fps = 0;
 	*/
 
+	i16_t jumpForce = 0;
+
 	// Game Loop
 	sdl::Event event;
 	while (wnd.isValid()) {
@@ -63,6 +65,7 @@ int main() {
 
 		bool moved = false;
 		bool gravity = false;
+		bool jumped = false;
 
 		while (sdl::PollEvent(&event) && !gravity) {
 			if (event.type == SDL_KEYDOWN) {
@@ -76,7 +79,8 @@ int main() {
 					break;
 
 					case SDLK_UP:
-						
+						jumpForce = Physic::Force::Jump;
+						jumped = true;
 					break;
 
 					case SDLK_LEFT:
@@ -98,10 +102,6 @@ int main() {
 							moved = true;
 						}
 					break;
-
-					case SDLK_SPACE:
-						
-					break;
 				}
 			} else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
 				wnd.close();
@@ -109,9 +109,18 @@ int main() {
 		}
 
 		if (!moved && !gravity)
-			Physic::gravity(&quinn, lvl.map);
+			gravity = Physic::gravity(&quinn, lvl.map);
 
-		if (quinn.position.y < 0 || 
+		if (jumpForce > 0) {
+			if (jumped && gravity)
+				jumpForce = 0;
+			else {
+				quinn.position.y -= jumpForce;
+				jumpForce -= Physic::Force::Gravity;
+			}
+		}
+
+		if (quinn.position.y > 0 && 
 			static_cast<u32_t>(quinn.position.y) > wnd.height())
 		{
 			SDL_Delay(1000);
@@ -120,7 +129,8 @@ int main() {
 		}
 
 		rend->clear();
-		rend->draw(*lvl.map);
+		// rend->draw(*lvl.map);
+		lvl.map->renderOn(rend);
 		rend->draw(quinn);
 		rend->present();
 	}
