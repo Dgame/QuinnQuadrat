@@ -26,7 +26,10 @@ int main() {
 
 	// Level
 	Level lvl;
-	lvl.loadNext(rend);
+	if (!lvl.loadNext(rend)) {
+		std::cerr << "No level found?!" << std::endl;
+		return 0;
+	}
 
 	// Sprites
 	sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
@@ -43,8 +46,6 @@ int main() {
 	fpsTimer.start();
 	f32_t fps = 0;
 	*/
-
-	i16_t jumpForce = 0;
 
 	// Game Loop
 	sdl::Event event;
@@ -66,6 +67,7 @@ int main() {
 		bool moved = false;
 		bool gravity = false;
 		bool jumped = false;
+		sdl::Vector2i jumpForce;
 
 		while (sdl::PollEvent(&event) && !gravity) {
 			if (event.type == SDL_KEYDOWN) {
@@ -79,7 +81,7 @@ int main() {
 					break;
 
 					case SDLK_UP:
-						jumpForce = Physic::Force::Jump;
+						jumpForce.y = -Physic::Force::JumpY;
 						jumped = true;
 					break;
 
@@ -111,21 +113,38 @@ int main() {
 		if (!moved && !gravity)
 			gravity = Physic::gravity(&quinn, lvl.map);
 
-		if (jumpForce > 0) {
+		if (jumpForce.y < 0) {
+			const u8_t* keyboardState = SDL_GetKeyboardState(nullptr);
+			if (keyboardState[SDL_SCANCODE_LEFT])
+				jumpForce.x = -Physic::Force::JumpX;
+			else if (keyboardState[SDL_SCANCODE_RIGHT])
+				jumpForce.x = Physic::Force::JumpX;
+
 			if (jumped && gravity)
-				jumpForce = 0;
+				jumpForce.y = 0;
 			else {
-				quinn.position.y -= jumpForce;
-				jumpForce -= Physic::Force::Gravity;
+				quinn.position += jumpForce;
+				jumpForce.y += Physic::Force::Gravity;
 			}
 		}
 
-		if (quinn.position.y > 0 && 
-			static_cast<u32_t>(quinn.position.y) > wnd.height())
+		u32_t win_w, win_h;
+		wnd.fetchSize(&win_w, &win_h);
+
+		if (quinn.position.x < (Tile::Size / 2) ||
+			(quinn.position.y > 0 && 
+			static_cast<u32_t>(quinn.position.y) > win_h))
 		{
 			SDL_Delay(1000);
 			timer.start();
 			quinn.position = quinnStartPos;
+		} else if (quinn.position.x > 0 
+			&& static_cast<u32_t>(quinn.position.x) > win_w)
+		{
+			if (!lvl.loadNext(rend)) {
+				std::cout << "You've won!" << std::endl;
+				break;
+			}
 		}
 
 		rend->clear();

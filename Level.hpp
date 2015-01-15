@@ -14,7 +14,7 @@ public:
 	Level();
 	virtual ~Level();
 	
-    void loadNext(sdl::Renderer*);
+    bool loadNext(sdl::Renderer*);
 
     u16_t curLvlNr() const {
     	return _levelNr;

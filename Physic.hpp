@@ -11,8 +11,9 @@ class TileMap;
 
 namespace Physic {
 	namespace Force {
-		const u16_t Gravity = 4;
-		const u16_t Jump = 20;
+		const u16_t Gravity = 8;
+		const u16_t JumpY = 32;
+		const u16_t JumpX = 64;
 	}
 
 	bool gravity(sdl::Sprite*, TileMap*);
