@@ -15,13 +15,10 @@ Als sich Quinn und Krista schließlich zu verlieben drohen, entführt Peter Poly
 Quinn, der das nicht hinnehmen kann, begibt sich auf die Suche nach Krista. Um Quinn daran zu hindern zieht Peter Polygon alle Register und entsendet Untergebene wie Mike Mehreck, die Brüder Tim und Tom Trapez und sogar die fiese Polygon Polizei. Außerdem gibt es zahlreiche Wegelagerer, sogenannte Geometrische-Greifer - kurz Geo-Gauner, die stets auf der Lauer liegen und wehrlose Flächenobjekte rücksichtslos überfallen. Es gibt noch mehr Bedrohungen in Form der mysteriösen Kreis-Klauber, sowie den Entnervten-Ellipsen, die Quinn jederzeit gefährlich werden können.
 
 ##Level 1
-Quinn findet sich in der offenen Landschaft wieder. Hier, direkt hinter der Shapw-City, ist das vorhandensein von Geo-Gaunern noch überschaubar, aber die Elitäre Haltung der Polygone hat sich herumgesprochen. Deswegen treiben einige wenige Kreis-Klauber aber vor allem Entnervte-Ellipsen hier ihr Unwesen. Letztere sind, obwohl sie eigentlich zu Oberschicht gehören sollten, Verstoßene, da sie auf Grund ihrer Form als unrein gelten. Darüber sind Ellipsen so entnervt, dass sie ohne zu zögern alles und jeden mit ätzenden Pixeln besprucken. Diese Pixel treten in Wechselwirkung mit den Pixel auf die sie treffen und löschen sich gegenseitig aus. Nur wenige Treffer sind nötig, um eine verherrende Wirkung zu erzielen.
+Quinn findet sich in der offenen Landschaft wieder. Hier, direkt hinter der Shape-City, ist das vorhandensein von Geo-Gaunern noch überschaubar, aber die Elitäre Haltung der Polygone hat sich herumgesprochen. Deswegen treiben einige wenige Kreis-Klauber aber vor allem Entnervte-Ellipsen hier ihr Unwesen. Letztere sind, obwohl sie eigentlich zu Oberschicht gehören sollten, Verstoßene, da sie auf Grund ihrer Form als unrein gelten. Darüber sind Ellipsen so entnervt, dass sie ohne zu zögern alles und jeden mit ätzenden Pixeln besprucken. Diese Pixel treten in Wechselwirkung mit den Pixel auf die sie treffen und löschen sich gegenseitig aus. Nur wenige Treffer sind nötig, um eine verherrende Wirkung zu erzielen.
 
 ##Level 2
 Entnervte Ellipsen werden etwas weniger, das Vorhandensein von Geo-Gaunern und Kreis-Klaubern nimmt zu.
-
-##Level 2
-Entnervte Ellipsen treten vereinzelt auf, Geo-Gauner und Kreis-Klauber sind an der Tagesordnung.
 
 ##Level 3
 Mehr Geo-Gauner als Kreis-Klauber, vereinzelt Entnervte-Ellipsen. Quinn trifft auf die Gebrüder Tim und Tom Trapez, gesandte des fiesen und hinterhältigen Mike Mehreck, der versucht, Eindruck bei Peter Polygon zu hinterlasen. Damit bezweckt Mike ein höheres Ansehen in der Gesellschaft.
