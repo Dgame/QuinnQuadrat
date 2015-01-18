@@ -20,7 +20,7 @@ const u16_t TicksPerFrame = 1000 / MaxFPS;
 
 int main() {
 	// Window
-	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 768, 480);
+	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
 	sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
 	rend->setDrawColor(sdl::Color::White);
 
@@ -40,117 +40,115 @@ int main() {
 	sdl::Timer timer;
 	timer.start();
 
-	/*
 	// FPS Timer
 	sdl::Timer fpsTimer;
 	fpsTimer.start();
-	f32_t fps = 0;
-	*/
+
+	u32_t fps = 0;
+	i16_t jumpForce = 0;
 
 	// Game Loop
 	sdl::Event event;
 	while (wnd.isValid()) {
-		/*
 		if (fpsTimer.getTicks() >= 1000) {
 			fpsTimer.start();
 			std::cout << "FPS: " << fps << std::endl;
 			fps = 0;
 		} else
 			fps++;
-		*/
+		
 		const u32_t frameTicks = timer.getTicks();
-		if (frameTicks < TicksPerFrame) {
-			SDL_Delay(TicksPerFrame - frameTicks);
+		if (frameTicks > TicksPerFrame) {
 			timer.start();
-		}
 
-		bool moved = false;
-		bool gravity = false;
-		bool jumped = false;
-		sdl::Vector2i jumpForce;
+			bool gravity = false;
+			bool moved = false;
+			bool jumped = false;
 
-		while (sdl::PollEvent(&event) && !gravity) {
-			if (event.type == SDL_KEYDOWN) {
-				switch (event.key.key) {
-					case SDLK_ESCAPE:
-						wnd.close();
-					break;
+			while (sdl::PollEvent(&event) && !gravity) {
+				if (event.type == SDL_KEYDOWN) {
+					switch (event.key.key) {
+						case SDLK_ESCAPE:
+							wnd.close();
+						break;
 
-					case SDLK_DOWN:
-					
-					break;
+						case SDLK_LEFT:
+							gravity = Physic::gravity(&quinn, lvl.map);
+							if (!gravity) {
+								quinn.position.x -= Physic::Force::Move;
+								quinn.rotationAngle -= 90;
+								moved = true;
+							}
+						break;
 
-					case SDLK_UP:
-						jumpForce.y = -Physic::Force::JumpY;
-						jumped = true;
-					break;
+						case SDLK_RIGHT:
+							gravity = Physic::gravity(&quinn, lvl.map);
+							if (!gravity) {
+								quinn.position.x += Physic::Force::Move;
+								quinn.rotationAngle += 90;
+								moved = true;
+							}
+						break;
 
-					case SDLK_LEFT:
-						gravity = Physic::gravity(&quinn, lvl.map);
-						if (!gravity) {
-							quinn.position.x -= Tile::Size;
-							quinn.rotationAngle -= 90;
+						case SDLK_UP:
+							gravity = Physic::gravity(&quinn, lvl.map);
+							if (!gravity && jumpForce >= 0) {
+								jumpForce = -Physic::Force::Jump;
+								jumped = true;
+							}
+						break;
+					}
+				} else if (event.type == SDL_WINDOWEVENT &&
+					event.window.event == SDL_WINDOWEVENT_CLOSE)
+				{
+					wnd.close();
+				}
+			}
 
-							moved = true;
-						}
-					break;
+			if (!moved && !jumped)
+				gravity = Physic::gravity(&quinn, lvl.map);
 
-					case SDLK_RIGHT:
-						gravity = Physic::gravity(&quinn, lvl.map);
-						if (!gravity) {
-							quinn.position.x += Tile::Size;
-							quinn.rotationAngle += 90;
+			if (jumped) {
+				const u8_t* keys = SDL_GetKeyboardState(nullptr);
+				if (keys[SDL_SCANCODE_LEFT]) {
+					quinn.position.x -= Physic::Force::JumpMove;
+					quinn.rotationAngle -= 90;
+				} else if (keys[SDL_SCANCODE_RIGHT]) {
+					quinn.position.x += Physic::Force::JumpMove;
+					quinn.rotationAngle += 90;
+				}
+			}
 
-							moved = true;
-						}
+			if (jumpForce < 0) {
+				quinn.position.y += jumpForce;
+				jumpForce += Physic::Force::JumpGravity;
+			}
+
+			u32_t win_w, win_h;
+			wnd.fetchSize(&win_w, &win_h);
+
+			if (quinn.position.x < 0 ||
+				(quinn.position.y > 0 && 
+				static_cast<u32_t>(quinn.position.y) > win_h))
+			{
+				std::cout << "You died!" << std::endl;
+				SDL_Delay(1000);
+				timer.start();
+				quinn.position = quinnStartPos;
+			} else if (quinn.position.x > 0 
+				&& static_cast<u32_t>(quinn.position.x) > win_w)
+			{
+				if (!lvl.loadNext(rend)) {
+					std::cout << "You've won!" << std::endl;
 					break;
 				}
-			} else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE) {
-				wnd.close();
 			}
+
+			rend->clear();
+			lvl.map->renderOn(rend);
+			rend->draw(quinn);
 		}
 
-		if (!moved && !gravity)
-			gravity = Physic::gravity(&quinn, lvl.map);
-
-		if (jumpForce.y < 0) {
-			const u8_t* keyboardState = SDL_GetKeyboardState(nullptr);
-			if (keyboardState[SDL_SCANCODE_LEFT])
-				jumpForce.x = -Physic::Force::JumpX;
-			else if (keyboardState[SDL_SCANCODE_RIGHT])
-				jumpForce.x = Physic::Force::JumpX;
-
-			if (jumped && gravity)
-				jumpForce.y = 0;
-			else {
-				quinn.position += jumpForce;
-				jumpForce.y += Physic::Force::Gravity;
-			}
-		}
-
-		u32_t win_w, win_h;
-		wnd.fetchSize(&win_w, &win_h);
-
-		if (quinn.position.x < (Tile::Size / 2) ||
-			(quinn.position.y > 0 && 
-			static_cast<u32_t>(quinn.position.y) > win_h))
-		{
-			SDL_Delay(1000);
-			timer.start();
-			quinn.position = quinnStartPos;
-		} else if (quinn.position.x > 0 
-			&& static_cast<u32_t>(quinn.position.x) > win_w)
-		{
-			if (!lvl.loadNext(rend)) {
-				std::cout << "You've won!" << std::endl;
-				break;
-			}
-		}
-
-		rend->clear();
-		// rend->draw(*lvl.map);
-		lvl.map->renderOn(rend);
-		rend->draw(quinn);
 		rend->present();
 	}
 }
