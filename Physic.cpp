@@ -38,7 +38,7 @@ namespace Physic {
 			jumpForce = Force::Jump;
 
 		if (jumpForce > 0) {
-			// if not jumped right now, let's check if we reached a Tile
+			// if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
 			if (!jumped) {
 				// TODO: check overlying Tile?
 				const Tile* tile = getUnderlyingTile(sprite, map);

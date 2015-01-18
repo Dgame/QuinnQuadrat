@@ -130,8 +130,8 @@ int main() {
 				SDL_Delay(1000);
 				timer.start();
 				quinn.position = quinnStartPos;
-			} else if (quinn.position.x > 0 
-				&& static_cast<u32_t>(quinn.position.x) > win_w)
+			} else if (quinn.position.x > 0 &&
+				static_cast<u32_t>(quinn.position.x) > win_w)
 			{
 				if (!lvl.loadNext(rend)) {
 					std::cout << "You've won!" << std::endl;
