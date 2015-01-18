@@ -45,7 +45,6 @@ int main() {
 	fpsTimer.start();
 
 	u32_t fps = 0;
-	i16_t jumpForce = 0;
 
 	// Game Loop
 	sdl::Event event;
@@ -92,10 +91,8 @@ int main() {
 
 						case SDLK_UP:
 							gravity = Physic::gravity(&quinn, lvl.map);
-							if (!gravity && jumpForce >= 0) {
-								jumpForce = -Physic::Force::Jump;
+							if (!gravity)
 								jumped = true;
-							}
 						break;
 					}
 				} else if (event.type == SDL_WINDOWEVENT &&
@@ -105,6 +102,7 @@ int main() {
 				}
 			}
 
+			// Don't apply gravity twice
 			if (!moved && !jumped)
 				gravity = Physic::gravity(&quinn, lvl.map);
 
@@ -119,10 +117,7 @@ int main() {
 				}
 			}
 
-			if (jumpForce < 0) {
-				quinn.position.y += jumpForce;
-				jumpForce += Physic::Force::JumpGravity;
-			}
+			Physic::jump(&quinn, lvl.map, jumped);
 
 			u32_t win_w, win_h;
 			wnd.fetchSize(&win_w, &win_h);

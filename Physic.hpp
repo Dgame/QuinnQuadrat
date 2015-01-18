@@ -8,6 +8,7 @@ namespace sdl {
 }
 
 class TileMap;
+struct Tile;
 
 namespace Physic {
 	namespace Force {
@@ -19,7 +20,9 @@ namespace Physic {
 		const u16_t JumpMove = 96;
 	}
 
+	Tile* getUnderlyingTile(sdl::Sprite* sprite, TileMap*);
 	bool gravity(sdl::Sprite*, TileMap*);
+	bool jump(sdl::Sprite*, TileMap*, bool);
 }
 
 #endif
