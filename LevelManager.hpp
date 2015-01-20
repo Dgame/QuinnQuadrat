@@ -3,34 +3,21 @@
 
 #include <vector>
 #include <iostream>
-#include "types.hpp"
+#include "SDL-Framework/types.hpp"
 
 namespace sdl {
 	class Renderer;
 }
 
+struct Level;
 class TileMap;
-class Level;
 
 class LevelManager {
 public:
 	LevelManager();
 	virtual ~LevelManager();
 
-	Level* loadNext(sdl::Renderer* rend) const {
-		_levelNr++;
-
-		Level* lvl = nullptr;
-		if (_level.size() < _levelNr) {
-			lvl = _level[_levelNr];
-			if (!lvl.build(rend)) {
-				std::cerr << "Could not load Level " << _levelNr << std::endl;
-				return nullptr;
-			}
-		}
-
-		return lvl;
-	}
+	Level* loadNext(sdl::Renderer*);
 
     u16_t curLvlNr() const {
     	return _levelNr;

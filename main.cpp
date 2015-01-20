@@ -8,6 +8,7 @@
 
 #undef main
 
+#include "LevelManager.hpp"
 #include "Level.hpp"
 #include "TileMap.hpp"
 #include "Tile.hpp"
@@ -25,9 +26,11 @@ int main() {
 	rend->setDrawColor(sdl::Color::White);
 
 	// Level
-	Level lvl;
-	if (!lvl.loadNext(rend)) {
-		std::cerr << "No level found?!" << std::endl;
+	LevelManager lvlm;
+	Level* lvl = lvlm.loadNext(rend);
+
+	if (!lvl) {
+		std::cerr << "Could not load first level" << std::endl;
 		return 0;
 	}
 
@@ -78,7 +81,7 @@ int main() {
 						break;
 
 						case SDLK_LEFT:
-							gravity = Physic::gravity(&quinn, lvl.map);
+							gravity = Physic::gravity(&quinn, lvl->map);
 							if (!gravity) {
 								quinn.position.x -= Physic::Force::Move;
 								quinn.rotationAngle -= 90;
@@ -87,7 +90,7 @@ int main() {
 						break;
 
 						case SDLK_RIGHT:
-							gravity = Physic::gravity(&quinn, lvl.map);
+							gravity = Physic::gravity(&quinn, lvl->map);
 							if (!gravity) {
 								quinn.position.x += Physic::Force::Move;
 								quinn.rotationAngle += 90;
@@ -96,7 +99,7 @@ int main() {
 						break;
 
 						case SDLK_UP:
-							gravity = Physic::gravity(&quinn, lvl.map);
+							gravity = Physic::gravity(&quinn, lvl->map);
 							if (!gravity)
 								jumped = true;
 						break;
@@ -110,7 +113,7 @@ int main() {
 
 			// Don't apply gravity twice
 			if (!moved && !jumped)
-				gravity = Physic::gravity(&quinn, lvl.map);
+				gravity = Physic::gravity(&quinn, lvl->map);
 
 			if (jumped) {
 				const u8_t* keys = SDL_GetKeyboardState(nullptr);
@@ -123,7 +126,7 @@ int main() {
 				}
 			}
 
-			Physic::jump(&quinn, lvl.map, jumped);
+			Physic::jump(&quinn, lvl->map, jumped);
 
 			u32_t win_w, win_h;
 			wnd.fetchSize(&win_w, &win_h);
@@ -139,14 +142,15 @@ int main() {
 			} else if (quinn.position.x > 0 &&
 				static_cast<u32_t>(quinn.position.x) > win_w)
 			{
-				if (!lvl.loadNext(rend)) {
+				lvl = lvlm.loadNext(rend);
+				if (!lvl) {
 					std::cout << "You've won!" << std::endl;
 					break;
 				}
 			}
 
 			rend->clear();
-			lvl.map->renderOn(rend);
+			lvl->map->renderOn(rend);
 			rend->draw(quinn);
 			rend->draw(geo_gauner);
 		}

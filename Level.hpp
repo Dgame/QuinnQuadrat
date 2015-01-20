@@ -14,7 +14,7 @@ struct Level {
 
 	virtual ~Level();
 
-	bool build(sdl::Renderer*);
+	bool build(sdl::Renderer*, u16_t);
 	virtual void run() { }
 };
 

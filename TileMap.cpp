@@ -11,7 +11,7 @@
 TileMap::TileMap(sdl::Renderer* rend, const std::string& filename) {
 	pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filename.c_str());
-    std::cout << filename << std::endl;
+    // std::cout << filename << std::endl;
 
     if (result) {
         pugi::xml_node map_node = doc.child("map");
