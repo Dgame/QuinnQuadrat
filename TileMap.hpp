@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "Framework/types.hpp"
-#include "Framework/Drawable.hpp"
+#include "SDL-Framework/types.hpp"
+#include "SDL-Framework/Drawable.hpp"
 
 namespace sdl {
     struct Vector2i;

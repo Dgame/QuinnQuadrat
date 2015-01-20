@@ -1,7 +1,7 @@
 #include "TileMap.hpp"
-#include "Framework/Renderer.hpp"
-#include "Framework/Window.hpp"
-#include "Framework/Surface.hpp"
+#include "SDL-Framework/Renderer.hpp"
+#include "SDL-Framework/Window.hpp"
+#include "SDL-Framework/Surface.hpp"
 #include "pugixml/src/pugixml.hpp"
 #include "Tile.hpp"
 

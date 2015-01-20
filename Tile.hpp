@@ -1,8 +1,8 @@
 #ifndef GAME_TILE_HPP
 #define GAME_TILE_HPP
 
-#include "Framework/types.hpp"
-#include "Framework/Sprite.hpp"
+#include "SDL-Framework/types.hpp"
+#include "SDL-Framework/Sprite.hpp"
 
 struct Tile : public sdl::Sprite {
 	static const u16_t Size = 32;

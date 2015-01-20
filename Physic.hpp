@@ -1,7 +1,7 @@
 #ifndef GAME_PHYSIC_HPP
 #define GAME_PHYSIC_HPP
 
-#include "Framework/types.hpp"
+#include "SDL-Framework/types.hpp"
 
 namespace sdl {
 	class Sprite;
@@ -12,12 +12,12 @@ struct Tile;
 
 namespace Physic {
 	namespace Force {
-		const u16_t Gravity = 8;
+		const u16_t Gravity = 4;
 		const u16_t Move = 32;
 
-		const u16_t Jump = 32;
-		const u16_t JumpGravity = 8;
-		const u16_t JumpMove = 96;
+		const u16_t Jump = 24;
+		const u16_t JumpGravity = 6;
+		const u16_t JumpMove = 64;
 	}
 
 	Tile* getUnderlyingTile(sdl::Sprite* sprite, TileMap*);

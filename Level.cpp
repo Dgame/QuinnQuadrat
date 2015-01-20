@@ -3,16 +3,13 @@
 #include <sstream>
 #include <fstream>
 
-Level::Level() {
-	
-}
-
 Level::~Level() {
 	delete this->map;
 }
 
-bool Level::loadNext(sdl::Renderer* rend) {
-	_levelNr++;
+bool build(sdl::Renderer* rend) {
+	if (this->map)
+		return true;
 
 	std::stringstream buf;
 	buf << "media/lvl/Level_" << _levelNr << ".tmx";
@@ -22,9 +19,6 @@ bool Level::loadNext(sdl::Renderer* rend) {
 	if (!f)
 		return false;
 	fclose(f);
-
-	if (this->map)
-		delete this->map;
 
 	this->map = new TileMap(rend, filename);
 

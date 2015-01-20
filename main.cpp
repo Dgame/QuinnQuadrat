@@ -1,10 +1,10 @@
-#include "Framework/Window.hpp"
-#include "Framework/Renderer.hpp"
-#include "Framework/Event.hpp"
-#include "Framework/Color.hpp"
-#include "Framework/Sprite.hpp"
-#include "Framework/Surface.hpp"
-#include "Framework/Timer.hpp"
+#include "SDL-Framework/Window.hpp"
+#include "SDL-Framework/Renderer.hpp"
+#include "SDL-Framework/Event.hpp"
+#include "SDL-Framework/Color.hpp"
+#include "SDL-Framework/Sprite.hpp"
+#include "SDL-Framework/Surface.hpp"
+#include "SDL-Framework/Timer.hpp"
 
 #undef main
 
@@ -32,9 +32,15 @@ int main() {
 	}
 
 	// Sprites
+
+	// Quinn
 	sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
-	sdl::Vector2i quinnStartPos(96, 8);
+	sdl::Vector2i quinnStartPos(96, -96);
 	sdl::Sprite quinn(quinn_tex, quinnStartPos);
+
+	// Geo-Gauner
+	sdl::Texture* geo_gauner_tex = sdl::Surface("media/Geo-Gauner.png").asTextureOf(rend);
+	sdl::Sprite geo_gauner(geo_gauner_tex, sdl::Vector2i(256, 36));
 
 	// Timer
 	sdl::Timer timer;
@@ -142,6 +148,7 @@ int main() {
 			rend->clear();
 			lvl.map->renderOn(rend);
 			rend->draw(quinn);
+			rend->draw(geo_gauner);
 		}
 
 		rend->present();

@@ -1,7 +1,7 @@
 #ifndef GAME_LEVEL_HPP
 #define GAME_LEVEL_HPP
 
-#include "Framework/types.hpp"
+#include "SDL-Framework/types.hpp"
 
 namespace sdl {
 	class Renderer;
@@ -9,22 +9,13 @@ namespace sdl {
 
 class TileMap;
 
-class Level {
-public:
-	Level();
-	virtual ~Level();
-	
-    bool loadNext(sdl::Renderer*);
-
-    u16_t curLvlNr() const {
-    	return _levelNr;
-    }
-    
-private:
-    u16_t _levelNr = 0;
-
-public:
+struct Level {
 	TileMap* map = nullptr;
+
+	virtual ~Level();
+
+	bool build(sdl::Renderer*);
+	virtual void run() { }
 };
 
 #endif
