@@ -11,7 +11,7 @@ namespace sdl {
 	struct Vector2i;
 	struct Rect;
 
-	class Drawable;
+	class WindowDrawable;
 	class Surface;
 	class Renderer;
 
@@ -35,7 +35,7 @@ namespace sdl {
 
 		void blit(Surface*, Rect*, const Rect* src = nullptr) const;
 
-		void draw(const Drawable&) const;
+		void draw(const WindowDrawable&) const;
 
 		void setTitle(const char*) const;
 		const char* getTitle() const;

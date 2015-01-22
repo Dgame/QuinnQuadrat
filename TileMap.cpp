@@ -73,12 +73,3 @@ void TileMap::renderOn(const sdl::Renderer* rend) const {
 		rend->draw(*tile);
 	}
 }
-
-void TileMap::renderOn(const sdl::Window* wnd) const {
-    if (!wnd)
-        return;
-
-    for (const Tile* tile : _tiles) {
-        wnd->draw(*tile);
-    }
-}

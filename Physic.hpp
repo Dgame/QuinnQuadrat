@@ -15,9 +15,9 @@ namespace Physic {
 		const u16_t Gravity = 4;
 		const u16_t Move = 32;
 
-		const u16_t Jump = 24;
-		const u16_t JumpGravity = 6;
-		const u16_t JumpMove = 64;
+		const u16_t Jump = 64;
+		const u16_t JumpGravity = 24;
+		const u16_t JumpMove = 128;
 	}
 
 	Tile* getUnderlyingTile(sdl::Sprite* sprite, TileMap*);

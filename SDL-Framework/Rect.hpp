@@ -8,7 +8,7 @@ struct SDL_Rect;
 namespace sdl {
 	struct Vector2i;
 
-	struct Rect {
+	struct Rect final {
 		enum class Edge {
 			Top,
 			Bottom,
@@ -28,7 +28,6 @@ namespace sdl {
 
 		Rect() = default;
 		explicit Rect(i32_t, i32_t, u32_t, u32_t);
-		virtual ~Rect() { }
 
 		SDL_Rect* copyInto(SDL_Rect*) const;
 

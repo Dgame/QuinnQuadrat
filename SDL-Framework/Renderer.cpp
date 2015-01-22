@@ -3,7 +3,7 @@
 #include "Texture.hpp"
 #include "Vector2.hpp"
 #include "Rect.hpp"
-#include "Drawable.hpp"
+#include "RendererDrawable.hpp"
 
 #include <SDL.h>
 #include <iostream>
@@ -120,7 +120,7 @@ namespace sdl {
 		);
 	}
 
-	void Renderer::draw(const Drawable& d) const {
+	void Renderer::draw(const RendererDrawable& d) const {
 		d.renderOn(this);
 	}
 

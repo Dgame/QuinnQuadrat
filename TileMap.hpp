@@ -5,7 +5,6 @@
 #include <string>
 
 #include "SDL-Framework/types.hpp"
-#include "SDL-Framework/Drawable.hpp"
 
 namespace sdl {
     struct Vector2i;
@@ -16,7 +15,7 @@ namespace sdl {
 
 struct Tile;
 
-class TileMap : public sdl::Drawable {
+class TileMap {
 public:
     explicit TileMap(sdl::Renderer*, const std::string&);
     virtual ~TileMap();
@@ -31,8 +30,7 @@ public:
         return _height;
     }
 
-    virtual void renderOn(const sdl::Renderer*) const override;
-    virtual void renderOn(const sdl::Window*) const override;
+    void renderOn(const sdl::Renderer*) const;
 
 private:
     std::vector<Tile*> _tiles;

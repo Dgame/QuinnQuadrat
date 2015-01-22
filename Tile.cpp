@@ -9,7 +9,7 @@ const u16_t TileSetMasks[] = {
 	(Tile::LeftEdge | Tile::Stone | Tile::Brittle),	(Tile::Stone | Tile::Brittle), 	(Tile::RightEdge | Tile::Stone | Tile::Brittle)
 };
 
-Tile::Tile(u16_t index, sdl::Texture* tex, const sdl::Vector2i& pos) : sdl::Sprite(tex, pos * Tile::Size) {
+Tile::Tile(u16_t index, sdl::Texture* tex, const sdl::Vector2i& pos) : sdl::RendererSprite(tex, pos * Tile::Size) {
 	const u16_t val = (index - 1) * Tile::Size;
 
 	this->sourceRect.x = (val % Tile::TilesetWidth);

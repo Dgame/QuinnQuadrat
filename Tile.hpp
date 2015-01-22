@@ -2,9 +2,9 @@
 #define GAME_TILE_HPP
 
 #include "SDL-Framework/types.hpp"
-#include "SDL-Framework/Sprite.hpp"
+#include "SDL-Framework/RendererSprite.hpp"
 
-struct Tile : public sdl::Sprite {
+struct Tile : public sdl::RendererSprite {
 	static const u16_t Size = 32;
 	static const u16_t TilesetWidth = 96;
 	static const u16_t TilesetHeight = 128;

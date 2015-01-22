@@ -3,7 +3,7 @@
 #include "Vector2.hpp"
 #include "Rect.hpp"
 #include "Surface.hpp"
-#include "Drawable.hpp"
+#include "WindowDrawable.hpp"
 #include "Renderer.hpp"
 
 #include <iostream>
@@ -91,7 +91,7 @@ namespace sdl {
 		SDL_BlitSurface(srfc->get(), TryCopyInto(src, &sdl_src), wnd_srfc, TryCopyInto(dst, &sdl_dst));
 	}
 
-	void Window::draw(const Drawable& d) const {
+	void Window::draw(const WindowDrawable& d) const {
 		d.renderOn(this);
 	}
 

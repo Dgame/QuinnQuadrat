@@ -13,7 +13,7 @@ namespace sdl {
 	struct Rect;
 	struct Vector2f;
 	struct Vector2i;
-	struct Drawable;
+	struct RendererDrawable;
 
 	class Texture;
 
@@ -34,7 +34,7 @@ namespace sdl {
 		void copy(Texture*, const Rect*, const Rect*) const;
 		void copy(Texture*, const Rect*, f64_t, const Rect* src = nullptr, const Vector2i* center = nullptr, u8_t flip = 0) const;
 
-		void draw(const Drawable&) const;
+		void draw(const RendererDrawable&) const;
 
 		void setRenderTarget(Texture*) const;
 
