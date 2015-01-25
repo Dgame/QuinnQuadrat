@@ -12,7 +12,8 @@ Entity::~Entity() {
 }
 
 void Entity::jump() {
-	_jumpForce = Physic::Force::Jump;
+	if (!this->isJumping())
+		_jumpForce = Physic::Force::Jump;
 }
 
 bool Entity::hasJumped() const {
