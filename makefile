@@ -1,6 +1,6 @@
 DIR = SDL-Framework
 FRAMEWORK_FILES = $(DIR)/Window.cpp $(DIR)/Vector2.cpp $(DIR)/Color.cpp $(DIR)/Rect.cpp $(DIR)/Texture.cpp $(DIR)/Renderer.cpp $(DIR)/Event.cpp $(DIR)/Sprite.cpp $(DIR)/WindowSprite.cpp $(DIR)/RendererSprite.cpp $(DIR)/Surface.cpp $(DIR)/Timer.cpp
-OBJS = main.cpp TileMap.cpp Tile.cpp Physic.cpp LevelManager.cpp Level.cpp Level/FirstLevel.cpp $(FRAMEWORK_FILES)
+OBJS = main.cpp TileMap.cpp Tile.cpp Physic.cpp Entity.cpp LevelManager.cpp Level.cpp Level/FirstLevel.cpp $(FRAMEWORK_FILES)
 CC = g++
 
 INCLUDE_PATHS = -I $(DIR)\SDL2-2.0.3\include\SDL2 -I $(DIR)\SDL2_image-2.0.0\include\SDL2

@@ -2,11 +2,10 @@
 #include "SDL-Framework/Sprite.hpp"
 #include "TileMap.hpp"
 #include "Tile.hpp"
+#include "Entity.hpp"
 
 namespace Physic {
-	static i16_t jumpForce = 0;
-
-	Tile* getUnderlyingTile(sdl::Sprite* sprite, TileMap* map) {
+	Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap* map) {
 		if (!sprite || !map)
 			return nullptr;
 
@@ -15,7 +14,7 @@ namespace Physic {
 		return map->getTileAt(bottomLeft);
 	}
 
-	bool gravity(sdl::Sprite* sprite, TileMap* map) {
+	bool gravity(sdl::RendererSprite* sprite, TileMap* map) {
 		if (!sprite || !map)
 			return false;
 
@@ -29,28 +28,22 @@ namespace Physic {
 		return false;
 	}
 
-	bool jump(sdl::Sprite* sprite, TileMap* map, bool jumped) {
-		if (!sprite || !map)
+	bool jump(Entity& entity, TileMap* map) {
+		if (!map)
 			return false;
 
-		// if we jumped right now and we aren't jumping currently
-		if (jumped && jumpForce <= 0)
-			jumpForce = Force::Jump;
-
-		if (jumpForce > 0) {
+		if (entity.isJumping()) {
 			// if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
-			if (!jumped) {
-				// TODO: check overlying Tile?
-				const Tile* tile = getUnderlyingTile(sprite, map);
+			if (!entity.hasJumped()) {
+				const Tile* tile = getUnderlyingTile(entity.sprite, map);
 				if (tile && (tile->mask & Tile::Gras)) {
-					jumpForce = 0;
-
+					entity.stopJump();
 					return false;
 				}
 			}
 
-			sprite->position.y -= jumpForce;
-			jumpForce -= Force::JumpGravity;
+			entity.sprite->position.y -= entity.getJumpForce();
+			entity.reduceJump();
 
 			return true;
 		}

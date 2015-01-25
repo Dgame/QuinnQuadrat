@@ -4,25 +4,27 @@
 #include "SDL-Framework/types.hpp"
 
 namespace sdl {
-	class Sprite;
+	class RendererSprite;
 }
 
 class TileMap;
+class Entity;
 struct Tile;
 
 namespace Physic {
 	namespace Force {
 		const u16_t Gravity = 4;
 		const u16_t Move = 32;
+		const u16_t MoveRotation = 90;
 
-		const u16_t Jump = 64;
-		const u16_t JumpGravity = 24;
-		const u16_t JumpMove = 128;
+		const u16_t Jump = 32;
+		const u16_t JumpGravity = 8;
+		const u16_t JumpMove = 32;
 	}
 
-	Tile* getUnderlyingTile(sdl::Sprite* sprite, TileMap*);
-	bool gravity(sdl::Sprite*, TileMap*);
-	bool jump(sdl::Sprite*, TileMap*, bool);
+	Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap*);
+	bool gravity(sdl::RendererSprite*, TileMap*);
+	bool jump(Entity&, TileMap*);
 }
 
 #endif

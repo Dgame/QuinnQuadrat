@@ -14,6 +14,7 @@
 #include "TileMap.hpp"
 #include "Tile.hpp"
 #include "Physic.hpp"
+#include "Entity.hpp"
 
 #include <iostream>
 
@@ -24,7 +25,7 @@ int main() {
 	// Window
 	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
 	sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
-	rend->setDrawColor(sdl::Color::White);
+	rend->setDrawColor(sdl::Color(128, 189, 254));
 
 	// Level
 	LevelManager lvlm;
@@ -40,7 +41,7 @@ int main() {
 	// Quinn
 	sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
 	sdl::Vector2i quinnStartPos(96, -96);
-	sdl::RendererSprite quinn(quinn_tex, quinnStartPos);
+	Entity quinn(new sdl::RendererSprite(quinn_tex, quinnStartPos));
 
 	// Timer
 	sdl::Timer timer;
@@ -66,11 +67,7 @@ int main() {
 		if (frameTicks > TicksPerFrame) {
 			timer.start();
 
-			bool gravity = false;
-			bool moved = false;
-			bool jumped = false;
-
-			while (sdl::PollEvent(&event) && !gravity) {
+			while (sdl::PollEvent(&event)) {
 				if (event.type == SDL_KEYDOWN) {
 					switch (event.key.key) {
 						case SDLK_ESCAPE:
@@ -78,27 +75,15 @@ int main() {
 						break;
 
 						case SDLK_LEFT:
-							gravity = Physic::gravity(&quinn, lvl->map);
-							if (!gravity) {
-								quinn.position.x -= Physic::Force::Move;
-								quinn.rotationAngle -= 90;
-								moved = true;
-							}
+							quinn.move(Direction::Left);
 						break;
 
 						case SDLK_RIGHT:
-							gravity = Physic::gravity(&quinn, lvl->map);
-							if (!gravity) {
-								quinn.position.x += Physic::Force::Move;
-								quinn.rotationAngle += 90;
-								moved = true;
-							}
+							quinn.move(Direction::Right);
 						break;
 
 						case SDLK_UP:
-							gravity = Physic::gravity(&quinn, lvl->map);
-							if (!gravity)
-								jumped = true;
+							quinn.jump();
 						break;
 					}
 				} else if (event.type == SDL_WINDOWEVENT &&
@@ -108,36 +93,39 @@ int main() {
 				}
 			}
 
-			// Don't apply gravity twice
-			if (!moved && !jumped)
-				gravity = Physic::gravity(&quinn, lvl->map);
-
-			if (jumped) {
+			if (quinn.isJumping()) {
 				const u8_t* keys = SDL_GetKeyboardState(nullptr);
-				if (keys[SDL_SCANCODE_LEFT]) {
-					quinn.position.x -= Physic::Force::JumpMove;
-					quinn.rotationAngle -= 90;
-				} else if (keys[SDL_SCANCODE_RIGHT]) {
-					quinn.position.x += Physic::Force::JumpMove;
-					quinn.rotationAngle += 90;
-				}
-			}
+				if (keys[SDL_SCANCODE_LEFT])
+					quinn.move(Direction::Left);
+				else if (keys[SDL_SCANCODE_RIGHT])
+					quinn.move(Direction::Right);
 
-			Physic::jump(&quinn, lvl->map, jumped);
+				// only jump if quinn is jumping	
+				if (!Physic::jump(quinn, lvl->map))
+					quinn.stopJump();
+
+				quinn.roll();
+			} else if (quinn.hasMoved()) {
+				if (!Physic::gravity(quinn.sprite, lvl->map))
+					quinn.roll();
+				else
+					quinn.stopMove();
+			} else
+				Physic::gravity(quinn.sprite, lvl->map);
 
 			u32_t win_w, win_h;
 			wnd.fetchSize(&win_w, &win_h);
 
-			if (quinn.position.x < 0 ||
-				(quinn.position.y > 0 && 
-				static_cast<u32_t>(quinn.position.y) > win_h))
+			if (quinn.sprite->position.x < 0 ||
+				(quinn.sprite->position.y > 0 && 
+				static_cast<u32_t>(quinn.sprite->position.y) > win_h))
 			{
 				std::cout << "You died!" << std::endl;
 				SDL_Delay(1000);
 				timer.start();
-				quinn.position = quinnStartPos;
-			} else if (quinn.position.x > 0 &&
-				static_cast<u32_t>(quinn.position.x) > win_w)
+				quinn.sprite->position = quinnStartPos;
+			} else if (quinn.sprite->position.x > 0 &&
+				static_cast<u32_t>(quinn.sprite->position.x) > win_w)
 			{
 				lvl = lvlm.loadNext(rend);
 				if (!lvl) {
@@ -148,7 +136,7 @@ int main() {
 
 			rend->clear();
 			lvl->renderOn(rend);
-			rend->draw(quinn);
+			quinn.sprite->renderOn(rend);
 		}
 
 		rend->present();
