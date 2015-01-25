@@ -25,7 +25,9 @@ int main() {
 	// Window
 	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
 	sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
-	rend->setDrawColor(sdl::Color(128, 189, 254));
+
+	const sdl::Color skyBlue(128, 189, 254);
+	rend->setDrawColor(skyBlue);
 
 	// Level
 	LevelManager lvlm;
@@ -120,14 +122,14 @@ int main() {
 			u32_t win_w, win_h;
 			wnd.fetchSize(&win_w, &win_h);
 
+			bool respawn = false;
+
 			if (quinn.sprite->position.x < 0 ||
 				(quinn.sprite->position.y > 0 && 
 				static_cast<u32_t>(quinn.sprite->position.y) > win_h))
 			{
 				std::cout << "You died!" << std::endl;
-				SDL_Delay(1000);
-				timer.start();
-				quinn.sprite->position = quinnStartPos;
+				respawn = true;
 			} else if (quinn.sprite->position.x > 0 &&
 				static_cast<u32_t>(quinn.sprite->position.x) > win_w)
 			{
@@ -138,6 +140,17 @@ int main() {
 				}
 			}
 
+			if (respawn) {
+				rend->setDrawColor(sdl::Color::Black);
+				rend->clear();
+				rend->present();
+				SDL_Delay(1500);
+				rend->setDrawColor(skyBlue);
+
+				timer.start();
+				quinn.sprite->position = quinnStartPos;
+			}
+			
 			rend->clear();
 			lvl->renderOn(rend);
 			quinn.sprite->renderOn(rend);
