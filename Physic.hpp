@@ -23,6 +23,7 @@ namespace Physic {
 	}
 
 	Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap*);
+	bool isInAir(sdl::RendererSprite*, TileMap*);
 	bool gravity(sdl::RendererSprite*, TileMap*);
 	bool jump(Entity&, TileMap*);
 }

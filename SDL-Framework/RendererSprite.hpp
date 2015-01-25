@@ -32,6 +32,8 @@ namespace sdl {
 		Texture* _tex = nullptr;
 
 	public:
+		// Vector2i center;
+		u8_t flipMode = 0;
 		f64_t rotationAngle = 0;
 	};
 }

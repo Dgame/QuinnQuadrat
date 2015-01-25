@@ -39,7 +39,7 @@ namespace sdl {
 			};
 
 			if (!feq(this->rotationAngle, 0)) {
-				rend->copy(_tex, &dst, this->rotationAngle, p_src);
+				rend->copy(_tex, &dst, this->rotationAngle, p_src, nullptr, this->flipMode);
 			} else
 				rend->copy(_tex, &dst, p_src);
 		}

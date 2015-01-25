@@ -83,7 +83,11 @@ int main() {
 						break;
 
 						case SDLK_UP:
-							quinn.jump();
+							if (!quinn.isJumping() && 
+								!Physic::isInAir(quinn.sprite, lvl->map))
+							{
+								quinn.jump();
+							}
 						break;
 					}
 				} else if (event.type == SDL_WINDOWEVENT &&

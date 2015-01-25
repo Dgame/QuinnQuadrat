@@ -14,13 +14,20 @@ namespace Physic {
 		return map->getTileAt(bottomLeft);
 	}
 
-	bool gravity(sdl::RendererSprite* sprite, TileMap* map) {
+	bool isInAir(sdl::RendererSprite* sprite, TileMap* map) {
 		if (!sprite || !map)
 			return false;
 
 		const Tile* tile = getUnderlyingTile(sprite, map);
+		return !tile || !(tile->mask & Tile::Gras);
+	}
+
+	bool gravity(sdl::RendererSprite* sprite, TileMap* map) {
+		if (!sprite || !map)
+			return false;
+
 		// gravity only apply if we are not on walkable ground
-		if (!tile || !(tile->mask & Tile::Gras)) {
+		if (isInAir(sprite, map)) {
 			sprite->position.y += Force::Gravity;
 			return true;
 		}
@@ -35,8 +42,7 @@ namespace Physic {
 		if (entity.isJumping()) {
 			// if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
 			if (!entity.hasJumped()) {
-				const Tile* tile = getUnderlyingTile(entity.sprite, map);
-				if (tile && (tile->mask & Tile::Gras)) {
+				if (!isInAir(entity.sprite, map)) {
 					entity.stopJump();
 					return false;
 				}
