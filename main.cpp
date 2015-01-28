@@ -85,8 +85,10 @@ int main() {
 						break;
 
 						case SDLK_UP:
+							// we can only jump, if quinn doesn't jump currently
+							// and if quinn is standing on walkable ground
 							if (!quinn.isJumping() && 
-								!Physic::isInAir(quinn.sprite, lvl->map))
+								Physic::isOnWalkableGround(quinn.sprite, lvl->map))
 							{
 								quinn.jump();
 							}
@@ -100,24 +102,17 @@ int main() {
 			}
 
 			if (quinn.isJumping()) {
-				const u8_t* keys = SDL_GetKeyboardState(nullptr);
-				if (keys[SDL_SCANCODE_LEFT])
-					quinn.move(Direction::Left);
-				else if (keys[SDL_SCANCODE_RIGHT])
-					quinn.move(Direction::Right);
-
-				// only jump if quinn is jumping	
-				if (!Physic::jump(quinn, lvl->map))
-					quinn.stopJump();
-
 				quinn.roll();
+				// only jump if quinn is jumping	
+				if (!Physic::jumpEffect(quinn, lvl->map))
+					quinn.stopJump();
 			} else if (quinn.hasMoved()) {
-				if (!Physic::gravity(quinn.sprite, lvl->map))
+				if (!Physic::gravityEffect(quinn.sprite, lvl->map))
 					quinn.roll();
 				else
 					quinn.stopMove();
 			} else
-				Physic::gravity(quinn.sprite, lvl->map);
+				Physic::gravityEffect(quinn.sprite, lvl->map);
 
 			u32_t win_w, win_h;
 			wnd.fetchSize(&win_w, &win_h);

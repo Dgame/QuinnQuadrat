@@ -22,7 +22,7 @@ bool Entity::hasJumped() const {
 
 void Entity::reduceJump() {
 	if (this->isJumping())
-		_jumpForce -= Physic::Force::JumpGravity;
+		_jumpForce -= Physic::Force::Gravity;
 }
 
 void Entity::roll() {

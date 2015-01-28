@@ -3,6 +3,7 @@
 #include "TileMap.hpp"
 #include "Tile.hpp"
 #include "Entity.hpp"
+#include <iostream>
 
 namespace Physic {
 	Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap* map) {
@@ -14,20 +15,20 @@ namespace Physic {
 		return map->getTileAt(bottomLeft);
 	}
 
-	bool isInAir(sdl::RendererSprite* sprite, TileMap* map) {
+	bool isOnWalkableGround(sdl::RendererSprite* sprite, TileMap* map) {
 		if (!sprite || !map)
 			return false;
 
 		const Tile* tile = getUnderlyingTile(sprite, map);
-		return !tile || !(tile->mask & Tile::Gras);
+		return tile && (tile->mask & Tile::Gras);
 	}
 
-	bool gravity(sdl::RendererSprite* sprite, TileMap* map) {
+	bool gravityEffect(sdl::RendererSprite* sprite, TileMap* map) {
 		if (!sprite || !map)
 			return false;
 
 		// gravity only apply if we are not on walkable ground
-		if (isInAir(sprite, map)) {
+		if (!isOnWalkableGround(sprite, map)) {
 			sprite->position.y += Force::Gravity;
 			return true;
 		}
@@ -35,19 +36,19 @@ namespace Physic {
 		return false;
 	}
 
-	bool jump(Entity& entity, TileMap* map) {
+	bool jumpEffect(Entity& entity, TileMap* map) {
 		if (!map)
 			return false;
 
 		if (entity.isJumping()) {
 			// if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
 			if (!entity.hasJumped()) {
-				if (!isInAir(entity.sprite, map)) {
+				if (isOnWalkableGround(entity.sprite, map)) {
 					entity.stopJump();
 					return false;
 				}
 			}
-
+			
 			entity.sprite->position.y -= entity.getJumpForce();
 			entity.reduceJump();
 

@@ -58,7 +58,7 @@ TileMap::~TileMap() {
 
 Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
     for (Tile* tile : _tiles) {
-        if (tile && tile->position == pos)
+        if (tile->position == pos)
             return tile;
     }
 
