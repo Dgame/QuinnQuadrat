@@ -8,10 +8,12 @@
 #include <fstream>
 
 sdl::Texture* Level::GeoGauner = nullptr;
+sdl::Texture* Level::SkyCloud = nullptr;
 
 namespace {
 	void initTextures(sdl::Renderer* rend) {
 		Level::GeoGauner = sdl::Surface("media/Geo-Gauner.png").asTextureOf(rend);
+		Level::SkyCloud = sdl::Surface("media/Cloud.png").asTextureOf(rend);
 	} 
 }
 

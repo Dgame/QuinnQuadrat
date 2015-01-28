@@ -147,8 +147,10 @@ int main() {
 			}
 			
 			rend->clear();
+			lvl->backgroundMotion();
 			lvl->renderOn(rend);
 			quinn.sprite->renderOn(rend);
+
 		}
 
 		rend->present();

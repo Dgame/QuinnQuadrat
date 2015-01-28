@@ -14,6 +14,8 @@ class TileMap;
 
 struct Level {
 	static sdl::Texture* GeoGauner;
+	static sdl::Texture* SkyCloud;
+	// static sdl::Texture* EntnervteEllipse;
 
 	TileMap* map = nullptr;
 	bool finished = false;
@@ -24,6 +26,7 @@ struct Level {
 	bool build(sdl::Renderer*, u16_t);
 
 	virtual void init() { }
+	virtual void backgroundMotion() { }
 	virtual void interaction(sdl::RendererSprite&) { }
 
 	virtual void renderOn(sdl::Renderer*) const;

@@ -3,7 +3,6 @@
 #include "TileMap.hpp"
 #include "Tile.hpp"
 #include "Entity.hpp"
-#include <iostream>
 
 namespace Physic {
 	Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap* map) {
