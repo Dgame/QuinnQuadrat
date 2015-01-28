@@ -5,33 +5,33 @@
 #include "Sprite.hpp"
 
 namespace sdl {
-	class Surface;
+    class Surface;
 
-	class WindowSprite : public Sprite, public WindowDrawable {
-	public:
-		explicit WindowSprite(Surface&);
-		explicit WindowSprite(Surface&, const Vector2i&);
+    class WindowSprite : public Sprite, public WindowDrawable {
+    public:
+        explicit WindowSprite(Surface&);
+        explicit WindowSprite(Surface&, const Vector2i&);
 
-		virtual ~WindowSprite() { }
+        virtual ~WindowSprite() { }
 
-		Surface* setSurface(Surface& new_srfc) {
-			Surface* old_srfc = _srfc;
-			_srfc = &new_srfc;
+        Surface* setSurface(Surface& new_srfc) {
+            Surface* old_srfc = _srfc;
+            _srfc = &new_srfc;
 
-			return old_srfc;
-		}
+            return old_srfc;
+        }
 
-		Surface* getSurface() const {
-			return _srfc;
-		}
+        Surface* getSurface() const {
+            return _srfc;
+        }
 
-		virtual Rect getClipRect() const override;
+        virtual Rect getClipRect() const override;
 
-		virtual void renderOn(const Window*) const override;
+        virtual void renderOn(const Window*) const override;
 
-	private:
-		Surface* _srfc = nullptr;
-	};
+    private:
+        Surface* _srfc = nullptr;
+    };
 }
 
 #endif

@@ -6,7 +6,7 @@
 #include "SDL-Framework/types.hpp"
 
 namespace sdl {
-	class Renderer;
+    class Renderer;
 }
 
 struct Level;
@@ -14,18 +14,18 @@ class TileMap;
 
 class LevelManager {
 public:
-	LevelManager();
-	virtual ~LevelManager();
+    LevelManager();
+    virtual ~LevelManager();
 
-	Level* loadNext(sdl::Renderer*);
+    Level* loadNext(sdl::Renderer*);
 
     u16_t curLvlNr() const {
-    	return _levelNr;
+        return _levelNr;
     }
 
 private:
-	std::vector<Level*> _level;
-	u16_t _levelNr = 0;
+    std::vector<Level*> _level;
+    u16_t _levelNr = 0;
 };
 
 #endif

@@ -22,137 +22,137 @@ const u16_t MaxFPS = 60;
 const u16_t TicksPerFrame = 1000 / MaxFPS;
 
 int main() {
-	// Window
-	sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
-	sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
+    // Window
+    sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
+    sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
 
-	const sdl::Color skyBlue(128, 189, 254);
-	rend->setDrawColor(skyBlue);
+    const sdl::Color skyBlue(128, 189, 254);
+    rend->setDrawColor(skyBlue);
 
-	// Level
-	LevelManager lvlm;
-	Level* lvl = lvlm.loadNext(rend);
+    // Level
+    LevelManager lvlm;
+    Level* lvl = lvlm.loadNext(rend);
 
-	if (!lvl) {
-		std::cerr << "Could not load first level" << std::endl;
-		return 0;
-	}
+    if (!lvl) {
+        std::cerr << "Could not load first level" << std::endl;
+        return 0;
+    }
 
-	// Sprites
+    // Sprites
 
-	// Quinn
-	sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
-	sdl::Vector2i quinnStartPos(96, -96);
-	Entity quinn(new sdl::RendererSprite(quinn_tex, quinnStartPos));
+    // Quinn
+    sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
+    sdl::Vector2i quinnStartPos(96, -96);
+    Entity quinn(new sdl::RendererSprite(quinn_tex, quinnStartPos));
 
-	// Timer
-	sdl::Timer timer;
-	timer.start();
+    // Timer
+    sdl::Timer timer;
+    timer.start();
 
-	// FPS Timer
-	sdl::Timer fpsTimer;
-	fpsTimer.start();
+    // FPS Timer
+    sdl::Timer fpsTimer;
+    fpsTimer.start();
 
-	u32_t fps = 0;
+    u32_t fps = 0;
 
-	// Game Loop
-	sdl::Event event;
-	while (wnd.isValid()) {
-		if (fpsTimer.getTicks() >= 1000) {
-			fpsTimer.start();
-			std::cout << "FPS: " << fps << std::endl;
-			fps = 0;
-		} else
-			fps++;
-		
-		const u32_t frameTicks = timer.getTicks();
-		if (frameTicks > TicksPerFrame) {
-			timer.start();
+    // Game Loop
+    sdl::Event event;
+    while (wnd.isValid()) {
+        if (fpsTimer.getTicks() >= 1000) {
+            fpsTimer.start();
+            std::cout << "FPS: " << fps << std::endl;
+            fps = 0;
+        } else
+            fps++;
+        
+        const u32_t frameTicks = timer.getTicks();
+        if (frameTicks > TicksPerFrame) {
+            timer.start();
 
-			while (sdl::PollEvent(&event)) {
-				if (event.type == SDL_KEYDOWN) {
-					switch (event.key.key) {
-						case SDLK_ESCAPE:
-							wnd.close();
-						break;
+            while (sdl::PollEvent(&event)) {
+                if (event.type == SDL_KEYDOWN) {
+                    switch (event.key.key) {
+                        case SDLK_ESCAPE:
+                            wnd.close();
+                        break;
 
-						case SDLK_LEFT:
-							quinn.move(Direction::Left);
-						break;
+                        case SDLK_LEFT:
+                            quinn.move(Direction::Left);
+                        break;
 
-						case SDLK_RIGHT:
-							quinn.move(Direction::Right);
-						break;
+                        case SDLK_RIGHT:
+                            quinn.move(Direction::Right);
+                        break;
 
-						case SDLK_UP:
-							// we can only jump, if quinn doesn't jump currently
-							// and if quinn is standing on walkable ground
-							if (!quinn.isJumping() && 
-								Physic::isOnWalkableGround(quinn.sprite, lvl->map))
-							{
-								quinn.jump();
-							}
-						break;
-					}
-				} else if (event.type == SDL_WINDOWEVENT &&
-					event.window.event == SDL_WINDOWEVENT_CLOSE)
-				{
-					wnd.close();
-				}
-			}
+                        case SDLK_UP:
+                            // we can only jump, if quinn doesn't jump currently
+                            // and if quinn is standing on walkable ground
+                            if (!quinn.isJumping() && 
+                                Physic::isOnWalkableGround(quinn.sprite, lvl->map))
+                            {
+                                quinn.jump();
+                            }
+                        break;
+                    }
+                } else if (event.type == SDL_WINDOWEVENT &&
+                    event.window.event == SDL_WINDOWEVENT_CLOSE)
+                {
+                    wnd.close();
+                }
+            }
 
-			if (quinn.isJumping()) {
-				quinn.roll();
-				// only jump if quinn is jumping	
-				if (!Physic::jumpEffect(quinn, lvl->map))
-					quinn.stopJump();
-			} else if (quinn.hasMoved()) {
-				if (!Physic::gravityEffect(quinn.sprite, lvl->map))
-					quinn.roll();
-				else
-					quinn.stopMove();
-			} else
-				Physic::gravityEffect(quinn.sprite, lvl->map);
+            if (quinn.isJumping()) {
+                quinn.roll();
+                // only jump if quinn is jumping    
+                if (!Physic::jumpEffect(quinn, lvl->map))
+                    quinn.stopJump();
+            } else if (quinn.hasMoved()) {
+                if (!Physic::gravityEffect(quinn.sprite, lvl->map))
+                    quinn.roll();
+                else
+                    quinn.stopMove();
+            } else
+                Physic::gravityEffect(quinn.sprite, lvl->map);
 
-			u32_t win_w, win_h;
-			wnd.fetchSize(&win_w, &win_h);
+            u32_t win_w, win_h;
+            wnd.fetchSize(&win_w, &win_h);
 
-			bool respawn = false;
+            bool respawn = false;
 
-			if (quinn.sprite->position.x < 0 ||
-				(quinn.sprite->position.y > 0 && 
-				static_cast<u32_t>(quinn.sprite->position.y) > win_h))
-			{
-				std::cout << "You died!" << std::endl;
-				respawn = true;
-			} else if (quinn.sprite->position.x > 0 &&
-				static_cast<u32_t>(quinn.sprite->position.x) > win_w)
-			{
-				lvl = lvlm.loadNext(rend);
-				if (!lvl) {
-					std::cout << "You've won!" << std::endl;
-					break;
-				}
-			}
+            if (quinn.sprite->position.x < 0 ||
+                (quinn.sprite->position.y > 0 && 
+                static_cast<u32_t>(quinn.sprite->position.y) > win_h))
+            {
+                std::cout << "You died!" << std::endl;
+                respawn = true;
+            } else if (quinn.sprite->position.x > 0 &&
+                static_cast<u32_t>(quinn.sprite->position.x) > win_w)
+            {
+                lvl = lvlm.loadNext(rend);
+                if (!lvl) {
+                    std::cout << "You've won!" << std::endl;
+                    break;
+                }
+            }
 
-			if (respawn) {
-				rend->setDrawColor(sdl::Color::Black);
-				rend->clear();
-				rend->present();
-				SDL_Delay(1500);
-				rend->setDrawColor(skyBlue);
+            if (respawn) {
+                rend->setDrawColor(sdl::Color::Black);
+                rend->clear();
+                rend->present();
+                SDL_Delay(1500);
+                rend->setDrawColor(skyBlue);
 
-				timer.start();
-				quinn.sprite->position = quinnStartPos;
-			}
-			
-			rend->clear();
-			lvl->backgroundMotion();
-			lvl->renderOn(rend);
-			quinn.sprite->renderOn(rend);
+                timer.start();
+                quinn.sprite->position = quinnStartPos;
+            }
+            
+            rend->clear();
+            lvl->backgroundMotion();
+            lvl->renderOn(rend);
+            quinn.sprite->renderOn(rend);
 
-		}
+        }
 
-		rend->present();
-	}
+        rend->present();
+    }
 }

@@ -5,13 +5,13 @@
 #include <vector>
 
 struct SkyLevel : public Level {
-	std::vector<sdl::RendererSprite*> _sky_clouds;
+    std::vector<sdl::RendererSprite*> _sky_clouds;
 
-	virtual ~SkyLevel();
+    virtual ~SkyLevel();
 
-	virtual void init() override;
-	virtual void backgroundMotion() override;
-	virtual void renderOn(sdl::Renderer*) const override;
+    virtual void init() override;
+    virtual void backgroundMotion() override;
+    virtual void renderOn(sdl::Renderer*) const override;
 };
 
 #endif

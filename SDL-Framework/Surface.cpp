@@ -20,123 +20,123 @@
 #endif
 
 namespace sdl {
-	Surface::Surface(u16_t w, u16_t h, u8_t d) {
-		_srfc = SDL_CreateRGBSurface(0, w, h, d, R_MASK, G_MASK, B_MASK, A_MASK);
-		if (!_srfc)
-			std::cerr << "Invalid SDL_Surface*\n";
-	}
+    Surface::Surface(u16_t w, u16_t h, u8_t d) {
+        _srfc = SDL_CreateRGBSurface(0, w, h, d, R_MASK, G_MASK, B_MASK, A_MASK);
+        if (!_srfc)
+            std::cerr << "Invalid SDL_Surface*\n";
+    }
 
-	Surface::Surface(void* pixel_data, u16_t w, u16_t h, u8_t d) {
-		const u16_t pitch = w * (d / 8);
+    Surface::Surface(void* pixel_data, u16_t w, u16_t h, u8_t d) {
+        const u16_t pitch = w * (d / 8);
         _srfc = SDL_CreateRGBSurfaceFrom(pixel_data, w, h, d, pitch, R_MASK, G_MASK, B_MASK, A_MASK);
         if (!_srfc)
-        	std::cerr << "Invalid SDL_Surface*\n";
-	}
+            std::cerr << "Invalid SDL_Surface*\n";
+    }
 
-	Surface::Surface(const char* filename) {
-		_srfc = IMG_Load(filename);
-		if (!_srfc)
-			std::cerr << "Invalid SDL_Surface*\n";
-	}
+    Surface::Surface(const char* filename) {
+        _srfc = IMG_Load(filename);
+        if (!_srfc)
+            std::cerr << "Invalid SDL_Surface*\n";
+    }
 
-	Surface::Surface(SDL_Surface* srfc) : _srfc(srfc) {
-		if (!srfc)
-			std::cerr << "Invalid SDL_Surface*\n";
-	}
+    Surface::Surface(SDL_Surface* srfc) : _srfc(srfc) {
+        if (!srfc)
+            std::cerr << "Invalid SDL_Surface*\n";
+    }
 
-	Surface::Surface(const Surface& other) {
-		_srfc = other.get();
-		if (_srfc)
-			_srfc->refcount++;
-		else
-			std::cerr << "Invalid SDL_Surface*\n";
-	}
+    Surface::Surface(const Surface& other) {
+        _srfc = other.get();
+        if (_srfc)
+            _srfc->refcount++;
+        else
+            std::cerr << "Invalid SDL_Surface*\n";
+    }
 
-	Surface::~Surface() {
-		SDL_FreeSurface(_srfc);
-	}
+    Surface::~Surface() {
+        SDL_FreeSurface(_srfc);
+    }
 
-	Texture* Surface::asTextureOf(Renderer* renderer) const {
-		return renderer->createTexture(_srfc, false);
-	}
+    Texture* Surface::asTextureOf(Renderer* renderer) const {
+        return renderer->createTexture(_srfc, false);
+    }
 
-	void Surface::saveToFile(const char* filename) const {
-		IMG_SavePNG(_srfc, filename);
-	}
+    void Surface::saveToFile(const char* filename) const {
+        IMG_SavePNG(_srfc, filename);
+    }
 
-	void Surface::blit(const Surface& srfc, Rect* dst, const Rect* src) const {
-		SDL_Rect sdl_src;
-		SDL_Rect sdl_dst;
+    void Surface::blit(const Surface& srfc, Rect* dst, const Rect* src) const {
+        SDL_Rect sdl_src;
+        SDL_Rect sdl_dst;
 
         SDL_BlitSurface(srfc.get(), TryCopyInto(src, &sdl_src), _srfc, TryCopyInto(dst, &sdl_dst));
-	}
+    }
 
-	u32_t Surface::width() const {
-		return _srfc ? _srfc->w : 0;
-	}
+    u32_t Surface::width() const {
+        return _srfc ? _srfc->w : 0;
+    }
 
-	u32_t Surface::height() const {
-		return _srfc ? _srfc->h : 0;
-	}
+    u32_t Surface::height() const {
+        return _srfc ? _srfc->h : 0;
+    }
 
-	void* Surface::pixels() const {
-		return _srfc ? _srfc->pixels : nullptr;
-	}
+    void* Surface::pixels() const {
+        return _srfc ? _srfc->pixels : nullptr;
+    }
 
-	SDL_PixelFormat* Surface::getFormat() const {
-		return _srfc ? _srfc->format : nullptr;
-	}
+    SDL_PixelFormat* Surface::getFormat() const {
+        return _srfc ? _srfc->format : nullptr;
+    }
 
-	Surface Surface::convert(const SDL_PixelFormat* fmt) const {
-		return Surface(SDL_ConvertSurface(_srfc, fmt, 0));
-	}
+    Surface Surface::convert(const SDL_PixelFormat* fmt) const {
+        return Surface(SDL_ConvertSurface(_srfc, fmt, 0));
+    }
 
-	void Surface::setColorKey(const Color* col, bool enable) const {
-		if (_srfc && col) {
-			u32_t pixel = 0;
-			if (enable) 
-				pixel = SDL_MapRGBA(_srfc->format, col->red, col->green, col->blue, col->alpha);
-			SDL_SetColorKey(_srfc, enable ? SDL_TRUE : SDL_FALSE, pixel);
-		}
-	}
+    void Surface::setColorKey(const Color* col, bool enable) const {
+        if (_srfc && col) {
+            u32_t pixel = 0;
+            if (enable) 
+                pixel = SDL_MapRGBA(_srfc->format, col->red, col->green, col->blue, col->alpha);
+            SDL_SetColorKey(_srfc, enable ? SDL_TRUE : SDL_FALSE, pixel);
+        }
+    }
 
-	Color Surface::getColorKey() const {
-		u32_t pixel = 0;
+    Color Surface::getColorKey() const {
+        u32_t pixel = 0;
 
-		if (_srfc) {
-			SDL_GetColorKey(_srfc, &pixel);
-			
-			Color col;
-			SDL_GetRGBA(pixel, _srfc->format,
-				&col.red, &col.green, &col.blue, &col.alpha);
+        if (_srfc) {
+            SDL_GetColorKey(_srfc, &pixel);
+            
+            Color col;
+            SDL_GetRGBA(pixel, _srfc->format,
+                &col.red, &col.green, &col.blue, &col.alpha);
 
-			return col;
-		}
+            return col;
+        }
 
-		return sdl::Color::Black;
-	}
+        return sdl::Color::Black;
+    }
 
-	void Surface::setColorMod(const Color& col) const {
-		SDL_SetSurfaceColorMod(_srfc, col.red, col.green, col.blue);
-		SDL_SetSurfaceAlphaMod(_srfc, col.alpha);
-	}
+    void Surface::setColorMod(const Color& col) const {
+        SDL_SetSurfaceColorMod(_srfc, col.red, col.green, col.blue);
+        SDL_SetSurfaceAlphaMod(_srfc, col.alpha);
+    }
 
-	Color Surface::getColorMod() const {
-		Color col;
-		SDL_GetSurfaceColorMod(_srfc, &col.red, &col.green, &col.blue);
-		SDL_GetSurfaceAlphaMod(_srfc, &col.alpha);
+    Color Surface::getColorMod() const {
+        Color col;
+        SDL_GetSurfaceColorMod(_srfc, &col.red, &col.green, &col.blue);
+        SDL_GetSurfaceAlphaMod(_srfc, &col.alpha);
 
-		return col;
-	}
+        return col;
+    }
 
-	void Surface::setBlendMode(u8_t blend_mode) const {
-		SDL_SetSurfaceBlendMode(_srfc, static_cast<SDL_BlendMode>(blend_mode));
-	}
+    void Surface::setBlendMode(u8_t blend_mode) const {
+        SDL_SetSurfaceBlendMode(_srfc, static_cast<SDL_BlendMode>(blend_mode));
+    }
 
-	u8_t Surface::getBlendMode() const {
-		SDL_BlendMode blend_mode;
-		SDL_GetSurfaceBlendMode(_srfc, &blend_mode);
+    u8_t Surface::getBlendMode() const {
+        SDL_BlendMode blend_mode;
+        SDL_GetSurfaceBlendMode(_srfc, &blend_mode);
 
-		return blend_mode;
-	}
+        return blend_mode;
+    }
 }

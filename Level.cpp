@@ -11,43 +11,43 @@ sdl::Texture* Level::GeoGauner = nullptr;
 sdl::Texture* Level::SkyCloud = nullptr;
 
 namespace {
-	void initTextures(sdl::Renderer* rend) {
-		Level::GeoGauner = sdl::Surface("media/Geo-Gauner.png").asTextureOf(rend);
-		Level::SkyCloud = sdl::Surface("media/Cloud.png").asTextureOf(rend);
-	} 
+    void initTextures(sdl::Renderer* rend) {
+        Level::GeoGauner = sdl::Surface("media/Geo-Gauner.png").asTextureOf(rend);
+        Level::SkyCloud = sdl::Surface("media/Cloud.png").asTextureOf(rend);
+    } 
 }
 
 Level::~Level() {
-	delete this->map;
+    delete this->map;
 }
 
 bool Level::build(sdl::Renderer* rend, u16_t nr) {
-	if (!rend)
-		return false;
+    if (!rend)
+        return false;
 
-	if (this->map)
-		return true;
+    if (this->map)
+        return true;
 
-	if (!GeoGauner)
-		initTextures(rend);
+    if (!GeoGauner)
+        initTextures(rend);
 
-	std::stringstream buf;
-	buf << "media/lvl/Level_" << nr << ".tmx";
+    std::stringstream buf;
+    buf << "media/lvl/Level_" << nr << ".tmx";
 
-	const std::string filename = buf.str();
-	FILE* f = fopen(filename.c_str(), "rb");
-	if (!f) {
-		std::cerr << "No such file: " << filename << std::endl;
-		return false;
-	}
-	fclose(f);
+    const std::string filename = buf.str();
+    FILE* f = fopen(filename.c_str(), "rb");
+    if (!f) {
+        std::cerr << "No such file: " << filename << std::endl;
+        return false;
+    }
+    fclose(f);
 
-	this->map = new TileMap(rend, filename);
+    this->map = new TileMap(rend, filename);
 
-	return true;
+    return true;
 }
 
 void Level::renderOn(sdl::Renderer* rend) const {
-	if (this->map)
-		this->map->renderOn(rend);
+    if (this->map)
+        this->map->renderOn(rend);
 }

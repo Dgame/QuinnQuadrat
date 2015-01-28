@@ -9,7 +9,7 @@
 #include <sstream>
 
 TileMap::TileMap(sdl::Renderer* rend, const std::string& filename) {
-	pugi::xml_document doc;
+    pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filename.c_str());
     // std::cout << filename << std::endl;
 
@@ -30,13 +30,13 @@ TileMap::TileMap(sdl::Renderer* rend, const std::string& filename) {
         for (pugi::xml_node_iterator it = data.begin(); it != data.end(); ++it) {
             // Layer
             for (pugi::xml_attribute_iterator ait = it->attributes_begin(); ait != it->attributes_end(); ++ait) {
-            	std::stringstream buf;
+                std::stringstream buf;
                 buf << ait->value();
                 u16_t index;
                 buf >> index;
                 
                 if (index != 0)
-                	_tiles.push_back(new Tile(index, _tex, pos));
+                    _tiles.push_back(new Tile(index, _tex, pos));
 
                 pos.x++;
                 if (pos.x >= _width) {
@@ -51,9 +51,9 @@ TileMap::TileMap(sdl::Renderer* rend, const std::string& filename) {
 
 
 TileMap::~TileMap() {
-	for (Tile* tile : _tiles) {
-		delete tile;
-	}
+    for (Tile* tile : _tiles) {
+        delete tile;
+    }
 }
 
 Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
@@ -66,10 +66,10 @@ Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
 }
 
 void TileMap::renderOn(const sdl::Renderer* rend) const {
-	if (!rend)
-		return;
+    if (!rend)
+        return;
 
-	for (const Tile* tile : _tiles) {
-		rend->draw(*tile);
-	}
+    for (const Tile* tile : _tiles) {
+        rend->draw(*tile);
+    }
 }

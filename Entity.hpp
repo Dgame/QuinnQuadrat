@@ -4,61 +4,61 @@
 #include "SDL-Framework/types.hpp"
 
 namespace sdl {
-	class RendererSprite;
+    class RendererSprite;
 }
 
 enum class Direction : i8_t {
-	None,
-	Left,
-	Right
+    None,
+    Left,
+    Right
 };
 
 class Entity {
 public:
-	sdl::RendererSprite* sprite;
+    sdl::RendererSprite* sprite;
 
-	explicit Entity(sdl::RendererSprite*);
-	virtual ~Entity();
+    explicit Entity(sdl::RendererSprite*);
+    virtual ~Entity();
 
-	void jump();
+    void jump();
 
-	bool isJumping() const {
-		return _jumpForce > 0;
-	}
+    bool isJumping() const {
+        return _jumpForce > 0;
+    }
 
-	bool hasJumped() const;
+    bool hasJumped() const;
 
-	void stopJump() {
-		_jumpForce = 0;
-	}
+    void stopJump() {
+        _jumpForce = 0;
+    }
 
-	void reduceJump();
+    void reduceJump();
 
-	u16_t getJumpForce() const {
-		return _jumpForce;
-	}
+    u16_t getJumpForce() const {
+        return _jumpForce;
+    }
 
-	Direction getDir() const {
-		return _dir;
-	}
+    Direction getDir() const {
+        return _dir;
+    }
 
-	bool hasMoved() const {
-		return _dir != Direction::None;
-	}
+    bool hasMoved() const {
+        return _dir != Direction::None;
+    }
 
-	void move(Direction the_dir) {
-		_dir = the_dir;
-	}
+    void move(Direction the_dir) {
+        _dir = the_dir;
+    }
 
-	void stopMove() {
-		_dir = Direction::None;
-	}
+    void stopMove() {
+        _dir = Direction::None;
+    }
 
-	void roll();
+    void roll();
 
 private:
-	Direction _dir = Direction::None;
-	i16_t _jumpForce = 0;
+    Direction _dir = Direction::None;
+    i16_t _jumpForce = 0;
 };
 
 #endif

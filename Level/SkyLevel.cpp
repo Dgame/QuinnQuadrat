@@ -4,13 +4,13 @@
 #include <random>
 
 SkyLevel::~SkyLevel() {
-	for (sdl::RendererSprite* sc : _sky_clouds) {
-		delete sc;
-	}
+    for (sdl::RendererSprite* sc : _sky_clouds) {
+        delete sc;
+    }
 }
 
 void SkyLevel::init() {
-	std::random_device rd;
+    std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> disx(0, 800);
     std::uniform_int_distribution<> disy(0, 200);
@@ -26,29 +26,29 @@ void SkyLevel::init() {
 }
 
 void SkyLevel::backgroundMotion() {
-	std::random_device rd;
+    std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> disx(-200, 10);
     std::uniform_int_distribution<> disy(0, 200);
 
-	for (sdl::RendererSprite* sc : _sky_clouds) {
-		const i16_t x = disx(gen);
-		const i16_t y = disy(gen);
+    for (sdl::RendererSprite* sc : _sky_clouds) {
+        const i16_t x = disx(gen);
+        const i16_t y = disy(gen);
 
-		sc->position.x += 1;
-		if (sc->position.x > 800) {
-    		sc->position.x = x;
-    		sc->position.y = y;
+        sc->position.x += 1;
+        if (sc->position.x > 800) {
+            sc->position.x = x;
+            sc->position.y = y;
 
-    		// std::cout << "x: " << x << ", y: " << y << std::endl;
-		}
-	}
+            // std::cout << "x: " << x << ", y: " << y << std::endl;
+        }
+    }
 }
 
 void SkyLevel::renderOn(sdl::Renderer* rend) const {
-	Level::renderOn(rend);
+    Level::renderOn(rend);
 
-	for (sdl::RendererSprite* sc : _sky_clouds) {
-		sc->renderOn(rend);
-	}
+    for (sdl::RendererSprite* sc : _sky_clouds) {
+        sc->renderOn(rend);
+    }
 }
