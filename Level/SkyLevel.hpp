@@ -1,6 +1,10 @@
 #ifndef SKY_GAME_LEVEL_HPP
 #define SKY_GAME_LEVEL_HPP
 
+namespace sdl {
+	class RendererSprite;
+}
+
 #include "../Level.hpp"
 #include <vector>
 

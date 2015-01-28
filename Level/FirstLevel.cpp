@@ -1,5 +1,6 @@
 #include "FirstLevel.hpp"
 #include "../SDL-Framework/RendererSprite.hpp"
+#include "../Entity.hpp"
 
 FirstLevel::~FirstLevel() {
     for (sdl::RendererSprite* gg : _geo_gauner) {
@@ -21,8 +22,12 @@ void FirstLevel::backgroundMotion() {
     SkyLevel::backgroundMotion();
 }
 
-void FirstLevel::interaction(sdl::RendererSprite&) {
-
+void FirstLevel::interaction(Entity& ent) {
+    if (ent.sprite->position.x >= 800 && 
+        (ent.sprite->position.y == 320 || ent.sprite->position.y == 352))
+    {
+        this->finished = true;
+    }
 }
 
 void FirstLevel::renderOn(sdl::Renderer* rend) const {

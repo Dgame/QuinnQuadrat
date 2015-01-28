@@ -6,10 +6,10 @@
 namespace sdl {
     class Texture;
     class Renderer;
-    class RendererSprite;
 }
 
 class TileMap;
+class Entity;
 
 struct Level {
     static sdl::Texture* GeoGauner;
@@ -26,7 +26,7 @@ struct Level {
 
     virtual void init() { }
     virtual void backgroundMotion() { }
-    virtual void interaction(sdl::RendererSprite&) { }
+    virtual void interaction(Entity&) { }
 
     virtual void renderOn(sdl::Renderer*) const;
 };

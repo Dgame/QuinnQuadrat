@@ -125,14 +125,6 @@ int main() {
             {
                 std::cout << "You died!" << std::endl;
                 respawn = true;
-            } else if (quinn.sprite->position.x > 0 &&
-                static_cast<u32_t>(quinn.sprite->position.x) > win_w)
-            {
-                lvl = lvlm.loadNext(rend);
-                if (!lvl) {
-                    std::cout << "You've won!" << std::endl;
-                    break;
-                }
             }
 
             if (respawn) {
@@ -144,6 +136,16 @@ int main() {
 
                 timer.start();
                 quinn.sprite->position = quinnStartPos;
+            }
+
+            lvl->interaction(quinn);
+
+            if (lvl->finished) {
+                lvl = lvlm.loadNext(rend);
+                if (!lvl) {
+                    std::cout << "You've won!" << std::endl;
+                    break;
+                }
             }
             
             rend->clear();

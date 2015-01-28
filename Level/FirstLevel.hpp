@@ -11,7 +11,7 @@ struct FirstLevel : public SkyLevel {
 
     virtual void init() override;
     virtual void backgroundMotion() override;
-    virtual void interaction(sdl::RendererSprite&) override;
+    virtual void interaction(Entity&) override;
     virtual void renderOn(sdl::Renderer*) const override;
 };
 
