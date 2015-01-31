@@ -3,9 +3,11 @@
 
 #include "SkyLevel.hpp"
 
+class Entity;
+
 struct FirstLevel : public SkyLevel {
     std::vector<sdl::RendererSprite*> _entnervte_ellipsen;
-    std::vector<sdl::RendererSprite*> _geo_gauner;
+    std::vector<Entity*> _geo_gauner;
 
     virtual ~FirstLevel();
 

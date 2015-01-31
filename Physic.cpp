@@ -5,20 +5,25 @@
 #include "Entity.hpp"
 
 namespace Physic {
-    Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap* map) {
-        if (!sprite || !map)
-            return nullptr;
-
-        const sdl::Vector2i bottomLeft = sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::BottomLeft);
-
-        return map->getTileAt(bottomLeft);
-    }
-
     bool isOnWalkableGround(sdl::RendererSprite* sprite, TileMap* map) {
         if (!sprite || !map)
             return false;
 
-        const Tile* tile = getUnderlyingTile(sprite, map);
+        const sdl::Vector2i bottom = sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Bottom);
+        const Tile* tile = map->getTileAt(bottom);
+
+        return tile && (tile->mask & Tile::Gras);
+    }
+
+    bool isNextOnWalkableGround(Entity* entity, TileMap* map) {
+        if (!map || !entity)
+            return false;
+
+        sdl::Vector2i bottom = entity->sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Bottom);
+        bottom.x += static_cast<i8_t>(entity->viewDirection) * Tile::Size;
+
+        const Tile* tile = map->getTileAt(bottom);
+
         return tile && (tile->mask & Tile::Gras);
     }
 
@@ -35,21 +40,21 @@ namespace Physic {
         return false;
     }
 
-    bool jumpEffect(Entity& entity, TileMap* map) {
-        if (!map)
+    bool jumpEffect(Entity* entity, TileMap* map) {
+        if (!map || !entity)
             return false;
 
-        if (entity.isJumping()) {
+        if (entity->isJumping()) {
             // if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
-            if (!entity.hasJumped()) {
-                if (isOnWalkableGround(entity.sprite, map)) {
-                    entity.stopJump();
+            if (!entity->hasJumped()) {
+                if (isOnWalkableGround(entity->sprite, map)) {
+                    entity->stopJump();
                     return false;
                 }
             }
             
-            entity.sprite->position.y -= entity.getJumpForce();
-            entity.reduceJump();
+            entity->sprite->position.y -= entity->getJumpForce();
+            entity->reduceJump();
 
             return true;
         }

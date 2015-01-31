@@ -15,16 +15,17 @@ namespace Physic {
     namespace Force {
         const u16_t Gravity = 4;
         
-        const u16_t Move = 32;
-        const u16_t MoveRotation = 90;
+        const u16_t Move = 4;
+        const u16_t MoveRotation = 11;
 
         const u16_t Jump = 28;
     }
 
-    Tile* getUnderlyingTile(sdl::RendererSprite* sprite, TileMap*);
     bool isOnWalkableGround(sdl::RendererSprite*, TileMap*);
+    bool isNextOnWalkableGround(Entity*, TileMap*);
+
     bool gravityEffect(sdl::RendererSprite*, TileMap*);
-    bool jumpEffect(Entity&, TileMap*);
+    bool jumpEffect(Entity*, TileMap*);
 }
 
 #endif

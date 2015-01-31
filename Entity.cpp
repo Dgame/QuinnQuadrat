@@ -26,19 +26,18 @@ void Entity::reduceJump() {
 }
 
 void Entity::roll() {
-    if (this->hasMoved()) {
-        if (_dir == Direction::Left) {
-            this->sprite->flipMode = SDL_FLIP_VERTICAL;
+    if (this->viewDirection == Direction::Left) {
+        this->sprite->flipMode = SDL_FLIP_VERTICAL;
 
-            this->sprite->position.x -= Physic::Force::Move;
-            this->sprite->rotationAngle -= Physic::Force::MoveRotation;
-        } else if (_dir == Direction::Right) {
-            this->sprite->flipMode = 0;
+        this->sprite->position.x -= Physic::Force::Move;
+        this->sprite->rotationAngle -= Physic::Force::MoveRotation;
+    } else if (this->viewDirection == Direction::Right) {
+        this->sprite->flipMode = 0;
 
-            this->sprite->position.x += Physic::Force::Move;
-            this->sprite->rotationAngle += Physic::Force::MoveRotation;
-        }
-
-        this->stopMove();
+        this->sprite->position.x += Physic::Force::Move;
+        this->sprite->rotationAngle += Physic::Force::MoveRotation;
     }
+
+    if (!this->infiniteMotion)
+        this->viewDirection = Direction::None;
 }

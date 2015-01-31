@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cmath>
 
 TileMap::TileMap(sdl::Renderer* rend, const std::string& filename) {
     pugi::xml_document doc;
@@ -57,8 +58,12 @@ TileMap::~TileMap() {
 }
 
 Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
+    const i16_t px = std::round(static_cast<float>(pos.x) / Tile::Size) * Tile::Size;
+    const i16_t py = std::floor(static_cast<float>(pos.y) / Tile::Size) * Tile::Size;
+
+    const sdl::Vector2i pixelPos(px, py);
     for (Tile* tile : _tiles) {
-        if (tile->position == pos)
+        if (tile->position == pixelPos)
             return tile;
     }
 

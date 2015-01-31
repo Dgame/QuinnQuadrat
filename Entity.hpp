@@ -8,14 +8,28 @@ namespace sdl {
 }
 
 enum class Direction : i8_t {
-    None,
-    Left,
-    Right
+    None = 0,
+    Left = -1,
+    Right = 1
 };
+
+inline Direction reverseDirection(Direction dir) {
+    switch (dir) {
+        case Direction::Left:
+            return Direction::Right;
+        case Direction::Right:
+            return Direction::Left;
+        default:
+        case Direction::None:
+            return dir;
+    }
+}
 
 class Entity {
 public:
     sdl::RendererSprite* sprite;
+    Direction viewDirection = Direction::None;
+    bool infiniteMotion = true;
 
     explicit Entity(sdl::RendererSprite*);
     virtual ~Entity();
@@ -38,26 +52,9 @@ public:
         return _jumpForce;
     }
 
-    Direction getDir() const {
-        return _dir;
-    }
-
-    bool hasMoved() const {
-        return _dir != Direction::None;
-    }
-
-    void move(Direction the_dir) {
-        _dir = the_dir;
-    }
-
-    void stopMove() {
-        _dir = Direction::None;
-    }
-
     void roll();
 
 private:
-    Direction _dir = Direction::None;
     i16_t _jumpForce = 0;
 };
 

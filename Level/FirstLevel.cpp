@@ -1,9 +1,10 @@
 #include "FirstLevel.hpp"
 #include "../SDL-Framework/RendererSprite.hpp"
 #include "../Entity.hpp"
+#include "../Physic.hpp"
 
 FirstLevel::~FirstLevel() {
-    for (sdl::RendererSprite* gg : _geo_gauner) {
+    for (Entity* gg : _geo_gauner) {
         delete gg;
     }
 
@@ -15,11 +16,21 @@ FirstLevel::~FirstLevel() {
 void FirstLevel::init() {
     SkyLevel::init();
 
-    _geo_gauner.push_back(new sdl::RendererSprite(Level::GeoGauner, sdl::Vector2i(256, 36)));
+    auto sprite = new sdl::RendererSprite(Level::GeoGauner, sdl::Vector2i(352, 32));
+    auto entity = new Entity(sprite);
+    entity->viewDirection = Direction::Left;
+
+    _geo_gauner.push_back(entity);
 }
 
 void FirstLevel::backgroundMotion() {
     SkyLevel::backgroundMotion();
+
+    for (Entity* gg : _geo_gauner) {
+        gg->roll();
+        if (!Physic::isNextOnWalkableGround(gg, this->map))
+            gg->viewDirection = reverseDirection(gg->viewDirection);
+    }
 }
 
 void FirstLevel::interaction(Entity& ent) {
@@ -33,8 +44,8 @@ void FirstLevel::interaction(Entity& ent) {
 void FirstLevel::renderOn(sdl::Renderer* rend) const {
     SkyLevel::renderOn(rend);
 
-    for (sdl::RendererSprite* gg : _geo_gauner) {
-        gg->renderOn(rend);
+    for (Entity* gg : _geo_gauner) {
+        gg->sprite->renderOn(rend);
     }
 
     for (sdl::RendererSprite* ee : _entnervte_ellipsen) {

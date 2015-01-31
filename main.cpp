@@ -44,6 +44,7 @@ int main() {
     sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
     sdl::Vector2i quinnStartPos(96, -96);
     Entity quinn(new sdl::RendererSprite(quinn_tex, quinnStartPos));
+    quinn.infiniteMotion = false;
 
     // Timer
     sdl::Timer timer;
@@ -77,11 +78,11 @@ int main() {
                         break;
 
                         case SDLK_LEFT:
-                            quinn.move(Direction::Left);
+                            quinn.viewDirection = Direction::Left;
                         break;
 
                         case SDLK_RIGHT:
-                            quinn.move(Direction::Right);
+                            quinn.viewDirection = Direction::Right;
                         break;
 
                         case SDLK_UP:
@@ -104,13 +105,13 @@ int main() {
             if (quinn.isJumping()) {
                 quinn.roll();
                 // only jump if quinn is jumping    
-                if (!Physic::jumpEffect(quinn, lvl->map))
+                if (!Physic::jumpEffect(&quinn, lvl->map))
                     quinn.stopJump();
-            } else if (quinn.hasMoved()) {
+            } else if (quinn.viewDirection != Direction::None) {
                 if (!Physic::gravityEffect(quinn.sprite, lvl->map))
                     quinn.roll();
                 else
-                    quinn.stopMove();
+                    quinn.viewDirection = Direction::None;
             } else
                 Physic::gravityEffect(quinn.sprite, lvl->map);
 
