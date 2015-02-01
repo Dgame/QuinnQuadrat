@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-const u16_t TileSetMasks[] = {
+const u16_t TileMasks[] = {
     (Tile::LeftEdge | Tile::Gras),                  Tile::Gras,                     (Tile::RightEdge | Tile::Gras),
     (Tile::LeftEdge | Tile::Gras | Tile::Brittle),  (Tile::Gras | Tile::Brittle),   (Tile::RightEdge | Tile::Gras | Tile::Brittle),
     (Tile::LeftEdge | Tile::Stone),                 Tile::Stone,                    (Tile::RightEdge | Tile::Stone),
@@ -17,5 +17,5 @@ Tile::Tile(u16_t index, sdl::Texture* tex, const sdl::Vector2i& pos) : sdl::Rend
     this->sourceRect.width = Tile::Size;
     this->sourceRect.height = Tile::Size;
 
-    this->mask = TileSetMasks[index - 1];
+    this->mask = TileMasks[index - 1];
 }

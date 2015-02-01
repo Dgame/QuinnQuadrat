@@ -1,60 +1,52 @@
 #include "Physic.hpp"
 #include "SDL-Framework/Sprite.hpp"
 #include "TileMap.hpp"
-#include "Tile.hpp"
 #include "Entity.hpp"
 
 namespace Physic {
-    bool isOnWalkableGround(sdl::RendererSprite* sprite, TileMap* map) {
-        if (!sprite || !map)
-            return false;
+    namespace {
+        bool isOnWalkableTile(Entity& entity, TileMap* map) {
+            const sdl::Vector2i curPos = entity.sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::BottomLeft);
+            const Tile* tile = map->getTileAt(curPos);
 
-        const sdl::Vector2i bottom = sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Bottom);
-        const Tile* tile = map->getTileAt(bottom);
-
-        return tile && (tile->mask & Tile::Gras);
+            return tile && (tile->mask & Tile::Gras);
+        }
     }
 
-    bool isNextOnWalkableGround(Entity* entity, TileMap* map) {
-        if (!map || !entity)
-            return false;
-
-        sdl::Vector2i bottom = entity->sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Bottom);
-        bottom.x += static_cast<i8_t>(entity->viewDirection) * Tile::Size;
-
-        const Tile* tile = map->getTileAt(bottom);
-
-        return tile && (tile->mask & Tile::Gras);
-    }
-
-    bool gravityEffect(sdl::RendererSprite* sprite, TileMap* map) {
-        if (!sprite || !map)
-            return false;
-
+    bool gravityEffect(Entity& entity, TileMap* map) {
         // gravity only apply if we are not on walkable ground
-        if (!isOnWalkableGround(sprite, map)) {
-            sprite->position.y += Force::Gravity;
+        if (!isOnWalkableTile(entity, map)) {
+            entity.sprite->position.y += Force::Gravity;
             return true;
         }
 
         return false;
     }
 
-    bool jumpEffect(Entity* entity, TileMap* map) {
-        if (!map || !entity)
-            return false;
-
-        if (entity->isJumping()) {
+    bool jumpEffect(Entity& entity, TileMap* map) {
+        if (entity.jumping) {
             // if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
-            if (!entity->hasJumped()) {
-                if (isOnWalkableGround(entity->sprite, map)) {
-                    entity->stopJump();
+            if (entity.jumping > 1) {
+                if (isOnWalkableTile(entity, map)) {
+                    entity.jumping = 0;
+                    entity.moving = 0;
                     return false;
                 }
             }
-            
-            entity->sprite->position.y -= entity->getJumpForce();
-            entity->reduceJump();
+
+            if (entity.moving && entity.jumping <= 4) {
+                if (entity.viewDirection == Direction::Left)
+                    entity.sprite->position.x -= 16;//Physic::Force::Move;
+                else
+                    entity.sprite->position.x += 16;//Physic::Force::Move;
+            }
+
+            if (entity.jumping > Physic::AnimationSteps)
+                entity.sprite->position.y += Physic::Force::Jump;
+            else
+                entity.sprite->position.y -= Physic::Force::Jump;
+
+            entity.jumping++;
 
             return true;
         }

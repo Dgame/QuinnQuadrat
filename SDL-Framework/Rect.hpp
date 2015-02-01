@@ -8,7 +8,7 @@ struct SDL_Rect;
 namespace sdl {
     struct Vector2i;
 
-    struct Rect final {
+    struct Rect {
         enum class Edge {
             Top,
             Bottom,

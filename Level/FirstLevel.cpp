@@ -18,7 +18,7 @@ void FirstLevel::init() {
 
     auto sprite = new sdl::RendererSprite(Level::GeoGauner, sdl::Vector2i(352, 32));
     auto entity = new Entity(sprite);
-    entity->viewDirection = Direction::Left;
+    entity->move(Direction::Left);
 
     _geo_gauner.push_back(entity);
 }
@@ -26,11 +26,11 @@ void FirstLevel::init() {
 void FirstLevel::backgroundMotion() {
     SkyLevel::backgroundMotion();
 
-    for (Entity* gg : _geo_gauner) {
-        gg->roll();
-        if (!Physic::isNextOnWalkableGround(gg, this->map))
-            gg->viewDirection = reverseDirection(gg->viewDirection);
-    }
+    // for (Entity* gg : _geo_gauner) {
+    //     gg->roll();
+    //     if (!Physic::isNextTileWalkable(gg, this->map))
+    //         gg->reverseDirection();
+    // }
 }
 
 void FirstLevel::interaction(Entity& ent) {

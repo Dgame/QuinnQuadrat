@@ -8,7 +8,7 @@ struct SDL_Point;
 namespace sdl {
     struct Vector2i;
 
-    struct Vector2f final {
+    struct Vector2f {
         f32_t x = 0;
         f32_t y = 0;
 
@@ -17,7 +17,7 @@ namespace sdl {
         Vector2f(const Vector2i&);
     };
 
-    struct Vector2i final {
+    struct Vector2i {
         i32_t x = 0;
         i32_t y = 0;
 

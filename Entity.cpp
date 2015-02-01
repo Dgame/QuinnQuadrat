@@ -11,33 +11,36 @@ Entity::~Entity() {
     delete this->sprite;
 }
 
-void Entity::jump() {
-    if (!this->isJumping())
-        _jumpForce = Physic::Force::Jump;
-}
+void Entity::reverseDirection() {
+    switch (this->viewDirection) {
+        case Direction::Left:
+            this->viewDirection = Direction::Right;
+        break;
 
-bool Entity::hasJumped() const {
-    return _jumpForce == Physic::Force::Jump;
-}
+        case Direction::Right:
+            this->viewDirection = Direction::Left;
+        break;
 
-void Entity::reduceJump() {
-    if (this->isJumping())
-        _jumpForce -= Physic::Force::Gravity;
+        default: break;
+    }
 }
 
 void Entity::roll() {
-    if (this->viewDirection == Direction::Left) {
-        this->sprite->flipMode = SDL_FLIP_VERTICAL;
+    if (this->moving) {
+        if (this->viewDirection == Direction::Left) {
+            this->sprite->flipMode = SDL_FLIP_VERTICAL;
 
-        this->sprite->position.x -= Physic::Force::Move;
-        this->sprite->rotationAngle -= Physic::Force::MoveRotation;
-    } else if (this->viewDirection == Direction::Right) {
-        this->sprite->flipMode = 0;
+            this->sprite->position.x -= Physic::Force::Move;
+            this->sprite->rotationAngle -= Physic::Force::Rotation;
+        } else if (this->viewDirection == Direction::Right) {
+            this->sprite->flipMode = 0;
 
-        this->sprite->position.x += Physic::Force::Move;
-        this->sprite->rotationAngle += Physic::Force::MoveRotation;
+            this->sprite->position.x += Physic::Force::Move;
+            this->sprite->rotationAngle += Physic::Force::Rotation;
+        }
+
+        this->moving++;
+        if (this->moving > Physic::AnimationSteps)
+            this->moving = 0;
     }
-
-    if (!this->infiniteMotion)
-        this->viewDirection = Direction::None;
 }

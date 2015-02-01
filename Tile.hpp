@@ -9,7 +9,7 @@ struct Tile : public sdl::RendererSprite {
     static const u16_t TilesetWidth = 96;
     static const u16_t TilesetHeight = 128;
 
-    enum Masks {
+    enum Mask {
         LeftEdge = 0x001,
         RightEdge = 0x002,
         Edge = LeftEdge | RightEdge,
@@ -18,7 +18,7 @@ struct Tile : public sdl::RendererSprite {
         Brittle = 0x010
     };
 
-    u16_t mask;
+    u8_t mask;
     
     explicit Tile(u16_t, sdl::Texture*, const sdl::Vector2i&);
     virtual ~Tile() { }
