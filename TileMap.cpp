@@ -63,6 +63,15 @@ Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
             return tile;
     }
 
+    sdl::Vector2i pixelPos;
+    pixelPos.x = std::round(pos.x / static_cast<f32_t>(Tile::Size)) * Tile::Size;
+    pixelPos.y = std::round(pos.y / static_cast<f32_t>(Tile::Size)) * Tile::Size;
+
+    for (Tile* tile : _tiles) {
+        if (tile->position == pixelPos)
+            return tile;
+    }
+
     return nullptr;
 }
 

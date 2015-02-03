@@ -2,6 +2,7 @@
 #include "SDL-Framework/Sprite.hpp"
 #include "TileMap.hpp"
 #include "Entity.hpp"
+#include <iostream>
 
 namespace Physic {
     namespace {
@@ -28,13 +29,17 @@ namespace Physic {
             // if not jumped right now (and therefore probably from a valid tile), let's check if we reached a Tile
             if (entity.jumping > 1) {
                 if (isOnWalkableTile(entity, map)) {
+                    std::cout << "-- End of Jump --" << std::endl;
                     entity.jumping = 0;
                     entity.moving = 0;
+
                     return false;
                 }
             }
 
-            if (entity.moving && entity.jumping <= 4) {
+            if (entity.moving && (entity.jumping % 2) == 0) {
+                std::cout << "MOVE while jumping: " << entity.jumping << std::endl;
+
                 if (entity.viewDirection == Direction::Left)
                     entity.sprite->position.x -= 16;//Physic::Force::Move;
                 else

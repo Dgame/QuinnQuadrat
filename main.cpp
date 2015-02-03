@@ -21,12 +21,14 @@
 const u16_t MaxFPS = 60;
 const u16_t TicksPerFrame = 1000 / MaxFPS;
 
+const sdl::Color skyBlue(128, 189, 254);
+
+void doRespawn(sdl::Renderer*);
+
 int main() {
     // Window
     sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
     sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
-
-    const sdl::Color skyBlue(128, 189, 254);
     rend->setDrawColor(skyBlue);
 
     // Level
@@ -122,18 +124,11 @@ int main() {
             }
 
             if (respawn) {
-                rend->setDrawColor(sdl::Color::Black);
-                rend->clear();
-                rend->present();
+                doRespawn(rend);
 
-                SDL_Delay(1500);
-
-                rend->setDrawColor(skyBlue);
                 timer.start();
-
                 quinn.sprite->position = quinnStartPos;
-                quinn.jumping = 0;
-                quinn.moving = false;
+                quinn.jumping = quinn.moving = quinn.sprite->rotationAngle = 0;
             }
 
             lvl->interaction(quinn);
@@ -157,4 +152,14 @@ int main() {
 
         rend->present();
     }
+}
+
+void doRespawn(sdl::Renderer* rend) {
+    rend->setDrawColor(sdl::Color::Black);
+    rend->clear();
+    rend->present();
+
+    SDL_Delay(1500);
+
+    rend->setDrawColor(skyBlue);
 }

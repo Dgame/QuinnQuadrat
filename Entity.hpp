@@ -34,7 +34,6 @@ struct Entity {
     }
 
     void reverseDirection();
-
     void roll();
 };
 

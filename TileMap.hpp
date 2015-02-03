@@ -21,6 +21,7 @@ public:
     virtual ~TileMap();
 
     Tile* getTileAt(const sdl::Vector2i&) const;
+    Tile* getTileNear(const sdl::Vector2i&) const;
 
     u16_t width() const {
         return _width;
