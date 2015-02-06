@@ -7,8 +7,8 @@
 namespace Physic {
     namespace {
         bool isOnWalkableTile(Entity& entity, TileMap* map) {
-            const sdl::Vector2i curPos = entity.sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::BottomLeft);
-            const Tile* tile = map->getTileAt(curPos);
+            const sdl::Vector2i curPos = entity.sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Bottom);
+            const Tile* tile = map->getTileNear(curPos);
 
             return tile && (tile->mask & Tile::Gras);
         }
