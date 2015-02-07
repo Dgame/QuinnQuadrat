@@ -56,6 +56,7 @@ int main() {
     fpsTimer.start();
 
     u32_t fps = 0;
+    bool reversedGravity = false;
 
     // Game Loop
     sdl::Event event;
@@ -71,12 +72,7 @@ int main() {
         if (frameTicks > TicksPerFrame) {
             timer.start();
 
-            bool isFalling = false;
-
-            if (quinn.jumping)
-                Physic::jumpEffect(quinn, lvl->map);
-            else if (!quinn.moving)
-                isFalling = Physic::gravityEffect(quinn, lvl->map);
+            Physic::gravityEffect(quinn, lvl->map, reversedGravity);
 
             while (sdl::PollEvent(&event)) {
                 if (event.type == SDL_KEYDOWN) {
@@ -86,18 +82,15 @@ int main() {
                         break;
 
                         case SDLK_LEFT:
-                            if (!isFalling)
-                                quinn.move(Direction::Left);
+                            quinn.move(Direction::Left);
                         break;
 
                         case SDLK_RIGHT:
-                            if (!isFalling)
-                                quinn.move(Direction::Right);
+                            quinn.move(Direction::Right);
                         break;
 
                         case SDLK_UP:
-                            if (!isFalling)
-                                quinn.jump();
+                            reversedGravity = !reversedGravity;
                         break;
                     }
                 } else if (event.type == SDL_QUIT) {
@@ -105,10 +98,7 @@ int main() {
                 }
             }
             
-            if (!isFalling)
-                quinn.roll();
-            else
-                quinn.moving = 0;
+            quinn.roll();
 
             u32_t win_w, win_h;
             wnd.fetchSize(&win_w, &win_h);

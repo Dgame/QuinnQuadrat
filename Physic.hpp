@@ -12,14 +12,11 @@ namespace Physic {
 
     namespace Force {
         const u16_t Move = Tile::Size / AnimationSteps;
-        const u16_t Jump = Tile::Size / (AnimationSteps / 2);
-
-        const u16_t Gravity = Tile::Size / (AnimationSteps / 2);
+        const u16_t Gravity = Tile::Size / AnimationSteps;
         const f32_t Rotation = 90.f / AnimationSteps;
     }
 
-    bool gravityEffect(Entity&, TileMap*);
-    bool jumpEffect(Entity&, TileMap*);
+    bool gravityEffect(Entity&, TileMap*, bool reversed = false);
 }
 
 #endif
