@@ -5,7 +5,7 @@
 #include <iostream>
 
 namespace Physic {
-    bool gravityEffect(Entity& entity, TileMap* map, bool reversed) {
+    bool gravityEffect(Entity& entity, TileMap& map, bool reversed) {
         sdl::Edge spriteEdge, tileEdge;
         if (!reversed) {
             spriteEdge = sdl::Edge::Bottom;
@@ -16,7 +16,7 @@ namespace Physic {
         }
 
         const sdl::Vector2i curPos = entity.sprite->getClipRect().getEdgePosition(spriteEdge);
-        const Tile* tile = map->getTileAt(curPos, tileEdge);
+        const Tile* tile = map.getTileAt(curPos, tileEdge);
 
         // gravity only apply if we are not on walkable ground
         if (!tile || !(tile->mask & Tile::Gras)) {
@@ -24,6 +24,23 @@ namespace Physic {
                 entity.sprite->position.y += Force::Gravity;
             else
                 entity.sprite->position.y -= Force::Gravity;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    bool bounceEffect(Entity& entity, TileMap& map) {
+        sdl::Vector2i curPos = entity.sprite->getClipRect().getEdgePosition(sdl::Edge::Bottom);
+        if (entity.viewDirection == Direction::Left)
+            curPos.x -= Tile::Size;
+        else
+            curPos.x += Tile::Size;
+
+        const Tile* tile = map.getTileAt(curPos, sdl::Edge::Top);
+        if (!tile || !(tile->mask & Tile::Gras)) {
+            entity.reverseDirection();
 
             return true;
         }

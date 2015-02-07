@@ -72,8 +72,8 @@ int main() {
         if (frameTicks > TicksPerFrame) {
             timer.start();
 
-            if (!quinn.moving)
-                Physic::gravityEffect(quinn, lvl->map, reversedGravity);
+            if (!quinn.isMoving())
+                Physic::gravityEffect(quinn, *lvl->map, reversedGravity);
 
             while (sdl::PollEvent(&event)) {
                 if (event.type == SDL_KEYDOWN) {
@@ -122,7 +122,7 @@ int main() {
 
                 timer.start();
                 quinn.sprite->position = quinnStartPos;
-                quinn.jumping = quinn.moving = quinn.sprite->rotationAngle = 0;
+                quinn.moving = quinn.sprite->rotationAngle = 0;
             }
 
             lvl->interaction(quinn);

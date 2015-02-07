@@ -26,11 +26,15 @@ void FirstLevel::init() {
 void FirstLevel::backgroundMotion() {
     SkyLevel::backgroundMotion();
 
-    // for (Entity* gg : _geo_gauner) {
-    //     gg->roll();
-    //     if (!Physic::isNextTileWalkable(gg, this->map))
-    //         gg->reverseDirection();
-    // }
+    for (Entity* gg : _geo_gauner) {
+        if (!gg->isMoving()) {
+            gg->moving = 1;
+
+            Physic::bounceEffect(*gg, *this->map);
+        }
+
+        gg->roll();
+    }
 }
 
 void FirstLevel::interaction(Entity& ent) {

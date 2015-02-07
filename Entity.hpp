@@ -15,22 +15,20 @@ enum class Direction : i8_t {
 struct Entity {
     sdl::RendererSprite* sprite;
     Direction viewDirection = Direction::Right;
-    u16_t jumping = 0;
     u16_t moving = 0;
 
     explicit Entity(sdl::RendererSprite*);
     virtual ~Entity();
 
-    void jump() {
-        if (!this->jumping)
-            this->jumping = 1;
-    }
-
     void move(Direction dir) {
-        if (!this->moving) {
+        if (!this->isMoving()) {
             this->moving = 1;
             this->viewDirection = dir;
         }
+    }
+
+    bool isMoving() const {
+        return this->moving > 0;
     }
 
     void reverseDirection();

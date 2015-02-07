@@ -26,7 +26,7 @@ void Entity::reverseDirection() {
 }
 
 void Entity::roll() {
-    if (this->moving) {
+    if (this->isMoving()) {
         if (this->viewDirection == Direction::Left) {
             this->sprite->flipMode = SDL_FLIP_VERTICAL;
 
