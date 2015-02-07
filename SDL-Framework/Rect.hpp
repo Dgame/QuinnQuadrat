@@ -8,19 +8,19 @@ struct SDL_Rect;
 namespace sdl {
     struct Vector2i;
 
-    struct Rect {
-        enum class Edge {
-            Top,
-            Bottom,
-            Left,
-            Right,
-            
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
-        };
+    enum class Edge : u8_t {
+        Top,
+        Bottom,
+        Left,
+        Right,
+        
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
+    };
 
+    struct Rect {
         i32_t x = 0;
         i32_t y = 0;
         u32_t width = 0;

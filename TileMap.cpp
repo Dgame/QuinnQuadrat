@@ -57,22 +57,9 @@ TileMap::~TileMap() {
     }
 }
 
-Tile* TileMap::getTileAt(const sdl::Vector2i& pos) const {
+Tile* TileMap::getTileAt(const sdl::Vector2i& pos, sdl::Edge edge) const {
     for (Tile* tile : _tiles) {
-        if (tile->position == pos)
-            return tile;
-    }
-
-    return nullptr;
-}
-
-Tile* TileMap::getTileNear(const sdl::Vector2i& pos) const {
-    sdl::Vector2i pixelPos;
-    pixelPos.x = std::floor(pos.x / static_cast<f32_t>(Tile::Size)) * Tile::Size;
-    pixelPos.y = std::floor(pos.y / static_cast<f32_t>(Tile::Size)) * Tile::Size;
-
-    for (Tile* tile : _tiles) {
-        if (tile->position == pixelPos)
+        if (tile->getClipRect().getEdgePosition(edge) == pos)
             return tile;
     }
 

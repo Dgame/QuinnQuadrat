@@ -9,6 +9,8 @@
 namespace sdl {
     struct Vector2i;
 
+    enum class Edge : u8_t;
+
     class Texture;
     class Renderer;
 }
@@ -20,8 +22,7 @@ public:
     explicit TileMap(sdl::Renderer*, const std::string&);
     virtual ~TileMap();
 
-    Tile* getTileAt(const sdl::Vector2i&) const;
-    Tile* getTileNear(const sdl::Vector2i&) const;
+    Tile* getTileAt(const sdl::Vector2i&, sdl::Edge) const;
 
     u16_t width() const {
         return _width;

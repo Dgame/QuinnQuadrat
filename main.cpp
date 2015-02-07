@@ -72,7 +72,8 @@ int main() {
         if (frameTicks > TicksPerFrame) {
             timer.start();
 
-            Physic::gravityEffect(quinn, lvl->map, reversedGravity);
+            if (!quinn.moving)
+                Physic::gravityEffect(quinn, lvl->map, reversedGravity);
 
             while (sdl::PollEvent(&event)) {
                 if (event.type == SDL_KEYDOWN) {
@@ -92,6 +93,9 @@ int main() {
                         case SDLK_UP:
                             reversedGravity = !reversedGravity;
                         break;
+
+                        case SDLK_SPACE:
+                            std::cout << '(' << quinn.sprite->position.x << ':' << quinn.sprite->position.y << ')' << std::endl;
                     }
                 } else if (event.type == SDL_QUIT) {
                     wnd.close();

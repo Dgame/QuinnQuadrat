@@ -6,13 +6,17 @@
 
 namespace Physic {
     bool gravityEffect(Entity& entity, TileMap* map, bool reversed) {
-        sdl::Vector2i curPos;
-        if (!reversed)
-            curPos = entity.sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Bottom);
-        else
-            curPos = entity.sprite->getClipRect().getEdgePosition(sdl::Rect::Edge::Top);
+        sdl::Edge spriteEdge, tileEdge;
+        if (!reversed) {
+            spriteEdge = sdl::Edge::Bottom;
+            tileEdge = sdl::Edge::Top;
+        } else {
+            spriteEdge = sdl::Edge::Top;
+            tileEdge = sdl::Edge::Bottom;
+        }
 
-        const Tile* tile = map->getTileNear(curPos);
+        const sdl::Vector2i curPos = entity.sprite->getClipRect().getEdgePosition(spriteEdge);
+        const Tile* tile = map->getTileAt(curPos, tileEdge);
 
         // gravity only apply if we are not on walkable ground
         if (!tile || !(tile->mask & Tile::Gras)) {
