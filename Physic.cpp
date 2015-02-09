@@ -5,6 +5,31 @@
 #include <iostream>
 
 namespace Physic {
+    bool outOfBounds(Entity& entity) {
+        if (entity.sprite->position.x < 0
+            || entity.sprite->position.x > WorldWidth)
+        {
+            return true;
+        }
+
+        if (entity.sprite->position.y < (Tile::Size * -3)
+            || entity.sprite->position.y > WorldHeight)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool dropEffect(Entity& entity, bool reversed) {
+        if (!reversed)
+            entity.sprite->position.y += Force::Gravity;
+        else
+            entity.sprite->position.y -= Force::Gravity;
+
+        return outOfBounds(entity);
+    }
+
     bool gravityEffect(Entity& entity, TileMap& map, bool reversed) {
         sdl::Edge spriteEdge, tileEdge;
         if (!reversed) {
@@ -20,10 +45,7 @@ namespace Physic {
 
         // gravity only apply if we are not on walkable ground
         if (!tile || !(tile->mask & Tile::Gras)) {
-            if (!reversed)
-                entity.sprite->position.y += Force::Gravity;
-            else
-                entity.sprite->position.y -= Force::Gravity;
+            dropEffect(entity, reversed);
 
             return true;
         }

@@ -21,15 +21,16 @@
 const u16_t MaxFPS = 60;
 const u16_t TicksPerFrame = 1000 / MaxFPS;
 
-const sdl::Color skyBlue(128, 189, 254);
+const sdl::Vector2i StartPos(96, -96);
+const sdl::Color SkyBlue(128, 189, 254);
 
-void doRespawn(sdl::Renderer*);
+void doRespawn(sdl::Renderer*, Entity&, Level*);
 
 int main() {
     // Window
-    sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), 800, 480);
+    sdl::Window wnd("Test-App", sdl::Vector2i(100, 100), Physic::WorldWidth, Physic::WorldHeight);
     sdl::Renderer* rend = wnd.createRenderer(SDL_RENDERER_ACCELERATED);
-    rend->setDrawColor(skyBlue);
+    rend->setDrawColor(SkyBlue);
 
     // Level
     LevelManager lvlm;
@@ -44,8 +45,7 @@ int main() {
 
     // Quinn
     sdl::Texture* quinn_tex = sdl::Surface("media/Quinn-Quadrat.png").asTextureOf(rend);
-    sdl::Vector2i quinnStartPos(96, -96);
-    Entity quinn(new sdl::RendererSprite(quinn_tex, quinnStartPos));
+    Entity quinn(new sdl::RendererSprite(quinn_tex, StartPos));
 
     // Timer
     sdl::Timer timer;
@@ -107,27 +107,34 @@ int main() {
             u32_t win_w, win_h;
             wnd.fetchSize(&win_w, &win_h);
 
-            bool respawn = false;
-
-            if (quinn.sprite->position.x < 0 ||
-                (quinn.sprite->position.y > 0 && 
-                static_cast<u32_t>(quinn.sprite->position.y) > win_h))
-            {
+            if (Physic::outOfBounds(quinn)) {
                 std::cout << "You died!" << std::endl;
-                respawn = true;
+                quinn.state = State::Dead;
             }
 
-            if (respawn) {
-                doRespawn(rend);
+            if (quinn.isDead()) {
+                if (!Physic::dropEffect(quinn)) {
+                    doRespawn(rend, quinn, lvl);
 
-                timer.start();
-                quinn.sprite->position = quinnStartPos;
-                quinn.moving = quinn.sprite->rotationAngle = 0;
-
-                reversedGravity = false;
+                    timer.start();
+                    reversedGravity = false;
+                }
             }
 
-            lvl->interaction(quinn);
+            const State stateBefore = quinn.state;
+
+            if (quinn.isAlive()) {
+                lvl->interaction(quinn);
+
+                if (stateBefore != quinn.state) {
+                    if (quinn.isDead()) {
+                        quinn.sprite->rotationAngle = 180;
+                        quinn.moving = 0;
+                    } else if (quinn.isHurt()) {
+                        // TODO: 
+                    }
+                }
+            }
 
             if (lvl->finished) {
                 lvl = lvlm.loadNext(rend);
@@ -143,19 +150,25 @@ int main() {
             lvl->renderOn(rend);
 
             quinn.sprite->renderOn(rend);
-
         }
 
         rend->present();
     }
 }
 
-void doRespawn(sdl::Renderer* rend) {
+void doRespawn(sdl::Renderer* rend, Entity& entity, Level* lvl) {
     rend->setDrawColor(sdl::Color::Black);
     rend->clear();
     rend->present();
 
     SDL_Delay(1500);
 
-    rend->setDrawColor(skyBlue);
+    rend->setDrawColor(SkyBlue);
+
+    entity.sprite->position = StartPos;
+    entity.moving = entity.sprite->rotationAngle = 0;
+    entity.state = State::Alive;
+
+    if (lvl)
+        lvl->restore();
 }

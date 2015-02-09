@@ -37,6 +37,7 @@ struct Level {
     virtual void init() { }
     virtual void backgroundMotion() { }
     virtual void interaction(Entity&) { }
+    virtual void restore() { }
 
     virtual void renderOn(sdl::Renderer*) const;
 };

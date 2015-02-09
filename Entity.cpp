@@ -3,12 +3,20 @@
 #include "SDL-Framework/RendererSprite.hpp"
 #include <SDL.h>
 
-Entity::Entity(sdl::RendererSprite* spr) : sprite(spr) {
+Entity::Entity(sdl::RendererSprite* spr) : startPosition(spr->position), sprite(spr) {
 
 }
 
 Entity::~Entity() {
     delete this->sprite;
+}
+
+void Entity::restore() {
+    this->moving = 0;
+
+    this->state = State::Alive;
+    this->sprite->position = this->startPosition;
+    this->sprite->rotationAngle = 0;
 }
 
 void Entity::reverseDirection() {
@@ -26,7 +34,7 @@ void Entity::reverseDirection() {
 }
 
 void Entity::roll() {
-    if (this->isMoving()) {
+    if (this->isMoving() && !this->isDead()) {
         if (this->viewDirection == Direction::Left) {
             this->sprite->flipMode = SDL_FLIP_VERTICAL;
 

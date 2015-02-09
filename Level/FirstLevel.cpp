@@ -3,16 +3,6 @@
 #include "../Entity.hpp"
 #include "../Physic.hpp"
 
-FirstLevel::~FirstLevel() {
-    for (Entity* gg : _geo_gauner) {
-        delete gg;
-    }
-
-    for (sdl::RendererSprite* ee : _entnervte_ellipsen) {
-        delete ee;
-    }
-}
-
 void FirstLevel::init() {
     SkyLevel::init();
 
@@ -22,11 +12,17 @@ void FirstLevel::init() {
     for (const LevelData& lvl_data : data) {
         if (lvl_data.type == "gg") {
             auto sprite = new sdl::RendererSprite(Level::GeoGauner, lvl_data.position);
-            auto entity = new Entity(sprite);
-            entity->move(Direction::Left);
+            auto ent = new Entity(sprite);
+            ent->move(Direction::Left);
 
-            _geo_gauner.push_back(entity);
+            _geo_gauner.push_back(ent);
         }
+    }
+}
+
+void FirstLevel::restore() {
+    for (Entity* gg : _geo_gauner) {
+        gg->restore();
     }
 }
 
@@ -34,13 +30,27 @@ void FirstLevel::backgroundMotion() {
     SkyLevel::backgroundMotion();
 
     for (Entity* gg : _geo_gauner) {
-        if (!gg->isMoving()) {
-            gg->moving = 1;
+        if (gg->isDead())
+            continue;
 
-            Physic::bounceEffect(*gg, *this->map);
+        switch (gg->state) {
+            case State::Alive:
+                if (!gg->isMoving()) {
+                    gg->moving = 1;
+
+                    Physic::bounceEffect(*gg, *this->map);
+                }
+
+                gg->roll();
+            break;
+
+            case State::Hurt:
+                if (!Physic::dropEffect(*gg))
+                    gg->state = State::Dead;
+            break;
+
+            case State::Dead: break;
         }
-
-        gg->roll();
     }
 }
 
@@ -50,16 +60,31 @@ void FirstLevel::interaction(Entity& ent) {
     {
         this->finished = true;
     }
+
+    const sdl::Rect clipRect = ent.sprite->getClipRect();
+
+    for (Entity* gg : _geo_gauner) {
+        if (gg->isDead())
+            continue;
+
+        if (gg->sprite->getClipRect().intersectWith(clipRect)) {
+            if (gg->sprite->position.y > ent.sprite->position.y) {
+                gg->state = State::Hurt;
+                gg->sprite->rotationAngle = 180;
+                gg->moving = 0;
+            } else
+                ent.state = ent.state == State::Hurt ? State::Dead : State::Hurt;
+        }
+    }
 }
 
 void FirstLevel::renderOn(sdl::Renderer* rend) const {
     SkyLevel::renderOn(rend);
 
     for (Entity* gg : _geo_gauner) {
-        gg->sprite->renderOn(rend);
-    }
+        if (gg->isDead())
+            continue;
 
-    for (sdl::RendererSprite* ee : _entnervte_ellipsen) {
-        ee->renderOn(rend);
+        gg->sprite->renderOn(rend);
     }
 }
