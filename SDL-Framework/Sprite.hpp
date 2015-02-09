@@ -11,6 +11,7 @@ namespace sdl {
 
         Sprite() = default;
         explicit Sprite(const Vector2i&);
+        
         virtual ~Sprite() { }
 
         virtual Rect getClipRect() const = 0;

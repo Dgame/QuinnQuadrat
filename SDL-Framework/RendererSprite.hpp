@@ -26,7 +26,6 @@ namespace sdl {
         }
 
         virtual Rect getClipRect() const override;
-
         virtual void renderOn(const Renderer*) const override;
         
     private:
