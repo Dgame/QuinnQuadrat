@@ -123,6 +123,8 @@ int main() {
                 timer.start();
                 quinn.sprite->position = quinnStartPos;
                 quinn.moving = quinn.sprite->rotationAngle = 0;
+
+                reversedGravity = false;
             }
 
             lvl->interaction(quinn);

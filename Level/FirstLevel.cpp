@@ -16,11 +16,18 @@ FirstLevel::~FirstLevel() {
 void FirstLevel::init() {
     SkyLevel::init();
 
-    auto sprite = new sdl::RendererSprite(Level::GeoGauner, sdl::Vector2i(352, 32));
-    auto entity = new Entity(sprite);
-    entity->move(Direction::Left);
+    std::vector<LevelData> data;
+    this->loadData(data);
 
-    _geo_gauner.push_back(entity);
+    for (const LevelData& lvl_data : data) {
+        if (lvl_data.type == "gg") {
+            auto sprite = new sdl::RendererSprite(Level::GeoGauner, lvl_data.position);
+            auto entity = new Entity(sprite);
+            entity->move(Direction::Left);
+
+            _geo_gauner.push_back(entity);
+        }
+    }
 }
 
 void FirstLevel::backgroundMotion() {
