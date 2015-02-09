@@ -41,6 +41,8 @@ int main() {
         return 0;
     }
 
+    std::cout << sizeof(sdl::RendererSprite) << ':' << sizeof(sdl::WindowSprite) << ':' << sizeof(Entity) << std::endl;
+
     // Sprites
 
     // Quinn
@@ -165,9 +167,7 @@ void doRespawn(sdl::Renderer* rend, Entity& entity, Level* lvl) {
 
     rend->setDrawColor(SkyBlue);
 
-    entity.sprite->position = StartPos;
-    entity.moving = entity.sprite->rotationAngle = 0;
-    entity.state = State::Alive;
+    entity.restore();
 
     if (lvl)
         lvl->restore();

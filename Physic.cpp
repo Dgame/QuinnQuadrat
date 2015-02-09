@@ -12,8 +12,8 @@ namespace Physic {
             return true;
         }
 
-        if (entity.sprite->position.y < (Tile::Size * -3)
-            || entity.sprite->position.y > WorldHeight)
+        if (entity.sprite->position.y < (Tile::Size * -5)
+            || entity.sprite->position.y > (WorldHeight + (Tile::Size * 5)))
         {
             return true;
         }

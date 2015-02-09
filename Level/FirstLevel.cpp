@@ -45,7 +45,7 @@ void FirstLevel::backgroundMotion() {
             break;
 
             case State::Hurt:
-                if (!Physic::dropEffect(*gg))
+                if (Physic::dropEffect(*gg))
                     gg->state = State::Dead;
             break;
 
@@ -64,7 +64,7 @@ void FirstLevel::interaction(Entity& ent) {
     const sdl::Rect clipRect = ent.sprite->getClipRect();
 
     for (Entity* gg : _geo_gauner) {
-        if (gg->isDead())
+        if (gg->isDead() || gg->isHurt())
             continue;
 
         if (gg->sprite->getClipRect().intersectWith(clipRect)) {
