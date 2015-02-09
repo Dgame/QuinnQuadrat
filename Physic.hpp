@@ -5,7 +5,7 @@
 #include "Tile.hpp"
 
 namespace sdl {
-    enum class Edge : u8_t;
+    enum class Edge;
 }
 
 class TileMap;

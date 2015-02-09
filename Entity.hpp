@@ -7,7 +7,7 @@ namespace sdl {
     class RendererSprite;
 }
 
-enum class Direction : i8_t {
+enum class Direction {
     Left = -1,
     Right = 1
 };

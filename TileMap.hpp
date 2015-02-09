@@ -9,7 +9,7 @@
 namespace sdl {
     struct Vector2i;
 
-    enum class Edge : u8_t;
+    enum class Edge;
 
     class Texture;
     class Renderer;
