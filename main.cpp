@@ -104,10 +104,8 @@ int main() {
                 }
             }
             
-            quinn.roll();
-
-            u32_t win_w, win_h;
-            wnd.fetchSize(&win_w, &win_h);
+            if (!lvl->freezed)
+                quinn.roll();
 
             if (Physic::outOfBounds(quinn)) {
                 std::cout << "You died!" << std::endl;
@@ -125,7 +123,7 @@ int main() {
 
             const State stateBefore = quinn.state;
 
-            if (quinn.isAlive()) {
+            if (quinn.isAlive() && !lvl->freezed) {
                 lvl->interaction(quinn);
 
                 if (stateBefore != quinn.state) {
